@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="tms_order_view_kanban" model="ir.ui.view">
+        <field name="name">tms.order.view.kanban.inherit.tms_shipment</field>
+        <field name="model">tms.order</field>
+        <field name="inherit_id" ref="tms.tms_order_view_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="start_trip" />
+            </xpath>
+
+            <xpath expr="//t[@t-esc='record.name.value']" position="after">
+                <t t-if="record.start_trip.raw_value">
+                    (s)
+                </t>
+
+            </xpath>
+        </field>
+    </record>
+</odoo>

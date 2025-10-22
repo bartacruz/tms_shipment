@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tms_stage_form_view" model="ir.ui.view">
+
+        <field name="name">tms.stage.form.inherit.tms_shipment</field>
+        <field name="model">tms.stage</field>
+        <field name="inherit_id" ref="tms.tms_stage_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_completed']" position="before">
+                <field name="is_active" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
