@@ -14,7 +14,7 @@ Truck shipment support for TMS
     "version": "17.0.1.0.3",
     "license": "AGPL-3",
 
-    'depends': ['tms'],
+    'depends': ['tms','tms_sale'],
 
     'data': [
         'views/tms_stage_views.xml',
