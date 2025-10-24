@@ -16,7 +16,7 @@
                 <field name="customer_id" />
                 <field name="sale_id" optional="hide"/>
             </xpath>
-            <xpath expr="//button_end_order" position="after">
+            <xpath expr="//button[@name='button_end_order']" position="after">
                 <field name="description" optional="show"/>
             </xpath>
         </field>
