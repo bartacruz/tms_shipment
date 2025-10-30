@@ -9,7 +9,24 @@ class TMSOrder(models.Model):
     _inherit = "tms.order"
 
     customer_id = fields.Many2one("res.partner", related="sale_id.partner_id")
+    color = fields.Integer("Color",compute = '_compute_tms_color')
 
+
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = record.driver_id.name or record.name
+    def _compute_tms_color(self):
+        for record in self:
+            if not record.driver_id:
+                record.color = 3
+            else:
+                if record.end_trip:
+                    record.color = 10
+                elif record.start_trip:
+                    record.color = 2
+                else:
+                    record.color = 7
+                
     @api.model
     def write(self, vals):
         for order in self:

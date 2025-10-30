@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_trip_view_form" model="ir.ui.view">
+        <field name="name">Create Sale</field>
+        <field name="model">sale.order.trip</field>
+        <field name="arch" type="xml">
+            <form string="Create Sale">
+                <field name="order_confirmed" invisible="1"/>
+                <div class="oe_title">
+                    <label for="partner_id" class="oe_edit_only" string="Customer" />
+                    <h2>
+                        <field name="partner_id" domain="[('is_company','=',True)]" />
+                    </h2>
+                </div>
+                <group
+                    name="tms_route_group"
+                    string="Route"
+                    groups="tms.group_tms_route"
+                >
+                    <group>
+                        <field
+                            name="has_route"
+                            string="Use route"
+                            readonly="order_confirmed"
+                        />
+                    </group>
+                    <group invisible="not has_route">
+                        <label for="route">Route</label>
+                        <div class="o_row">
+                            <field name="route" readonly="order_confirmed" />
+                        </div>
+                    </group>
+                    <span invisible="has_route" />
+                    <group>
+                        <field
+                            name="origin"
+                            invisible="has_route"
+                            readonly="order_confirmed"
+                        />
+                    </group>
+                    <group invisible="has_route">
+                        <label for="destination">Destination</label>
+                        <div class="o_row">
+                            <field name="destination" readonly="order_confirmed" />
+                        </div>
+                    </group>
+                </group>
+                <group name="tms_route" string="Routs" groups="!tms.group_tms_route">
+                    <group>
+                        <field name="origin" readonly="order_confirmed" />
+                    </group>
+                    <group>
+                        <label for="destination">Destination</label>
+                        <div class="o_row">
+                            <field name="destination" readonly="order_confirmed" />
+                        </div>
+                    </group>
+
+                </group>
+                <group name="tms_details" string="Details">
+                    <group>
+                        
+                        <field name="product_id" filter_domain="[('tms_trip','=',True)]"/>
+                    </group>
+                    <group>
+                        <field name="qty" />    
+                    </group>
+                </group>
+                
+                <footer>
+                    <button type="object" name="create_sale_order"
+                        string="Save"
+                        class="btn-primary"
+                        data-hotkey="q"
+                    />
+                    <button
+                        string="Cancel"
+                        class="btn-secondary"
+                        special="cancel"
+                        data-hotkey="x"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_view_trip_sale_order" model="ir.actions.act_window">
+        <field name="name">Trip information</field>
+        <field name="res_model">sale.order.trip</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="sale_order_trip_view_form" />
+    </record>
+</odoo>
+                
