@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="TMSOrderListWidgetTemplate">
+        <div class="o_tms_order_list_container">
+            <t t-foreach="records" t-as="record_id">
+                <span class="o_tms_order_tem" t-att-data-record-id="record_id">
+                    <!-- Display record information, e.g., name -->
+                    <t t-esc="record_id"/>
+                </span>
+            </t>
+        </div>
+    </t>
+</templates>

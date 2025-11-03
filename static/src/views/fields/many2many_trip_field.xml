@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="tms_shipment.Many2ManyTripField">
+        <div
+            class="facu-mosca many2many_trip_field_container o_field_tags d-flex flex-column flex-wrap mw-100 gap-1"
+            t-att-class="{'o_tags_input o_input': !props.readonly}"
+            t-ref="many2ManyTagsField"
+        >
+            <TagsList tags="tags" itemsVisible="itemsVisible"/>
+            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+                <Many2XAutocomplete
+                    id="props.id"
+                    placeholder="tags.length ? '' : props.placeholder"
+                    resModel="relation"
+                    autoSelect="true"
+                    fieldString="string"
+                    activeActions="activeActions"
+                    update="update"
+                    quickCreate="activeActions.create ? quickCreate : null"
+                    context="props.context"
+                    getDomain.bind="getDomain"
+                    isToMany="true"
+                />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="tms_shipment.KanbanMany2ManyTripFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//t[@t-foreach='visibleTags']" position="before">
+            <t t-if="canDisplayQuickAssignAvatar">
+                <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" title="Assign"
+                   aria-label="Assign" class="o_quick_assign fa fa-user-plus o_m2m_avatar btn-link d-flex align-items-center text-dark" role="button"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@t-if='props.displayText']" position="replace">
+            <t t-if="tag.driver">
+                <div
+                class="o_tag_badge_text text-truncate o_tag_driver mx-1"
+                t-out="tag.driver"/>
+                <i
+                    class="fa fa-truck mx-2 oe_read_only"
+                    aria-label="Truck"
+                    title="Truck"
+                />
+                <div
+                    t-if="tag.vehicle"
+                    class="o_tag_badge_text text-truncate o_tag_vehicle mx-1"
+                    t-out="tag.vehicle"/>
+                <div
+                    t-else=""
+                    class="o_tag_badge_text text-truncate o_tag_assign">
+                    (No registrado)
+                </div>
+            </t>
+            <t t-else="">
+                <div
+                    
+                    class="o_tag_badge_text text-truncate o_tag_text"
+                    t-att-class="{'position-relative ms-1' : tag.img}"
+                    t-out="tag.text"/>
+                <div
+                    class="o_tag_badge_text text-truncate o_tag_assign">
+                    (Asignar)
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//span[hasclass('o_m2m_avatar_empty')]" position="attributes">
+            <attribute name="t-on-click.stop.prevent">openPopover</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="tms_shipment.KanbanMany2ManyTripField" t-inherit="tms_shipment.Many2ManyTripField" t-inherit-mode="primary"
+      >
+        <xpath expr="//TagsList" position="attributes">
+            <attribute name="popoverProps">popoverProps</attribute>
+            <attribute name="readonly">!props.isEditable</attribute>
+        </xpath>
+    </t>
+    <t t-name="tms_shipment.Many2ManyTripFieldPopover" t-inherit="tms_shipment.Many2ManyTripField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_tags')]" position="attributes">
+            <attribute name="class" add="p-2 o_m2m_trip_field_popover o_field_widget o_field_many2many_trip" remove="d-inline-flex mw-100" separator=" " />
+        </xpath>
+        <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="attributes">
+            <attribute name="class" add="w-100" separator=" " />
+        </xpath>
+        <Many2XAutocomplete position="attributes">
+            <attribute name="dropdown">false</attribute>
+            <attribute name="placeholder">props.placeholder</attribute>
+            <attribute name="autofocus">true</attribute>
+        </Many2XAutocomplete>
+    </t>
+
+</templates>

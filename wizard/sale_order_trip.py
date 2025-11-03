@@ -32,6 +32,7 @@ class SaleOrderTrip(models.TransientModel):
             self.order_confirmed = True
         else:
             self.order_confirmed = False
+            
     def create_sale_order(self):
         vals_list = [{
             "partner_id": self.partner_id.id,
@@ -48,5 +49,4 @@ class SaleOrderTrip(models.TransientModel):
         } ]
         print("vals",vals_list)
         self.env["sale.order"].create(vals_list)
-        
-        
+

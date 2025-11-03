@@ -15,7 +15,21 @@ Truck shipment support for TMS
     "license": "AGPL-3",
 
     'depends': ['tms','tms_sale'],
-    
+    "assets": {
+        "web.assets_backend": [
+            "tms_shipment/static/src/js/driver_list.js",
+            "tms_shipment/static/src/js/driver_list.scss",
+            "tms_shipment/static/src/js/driver_list.xml",
+            "tms_shipment/static/src/js/kanban_controller.js",
+            "tms_shipment/static/src/js/kanban_controller.scss",
+            "tms_shipment/static/src/js/kanban_controller.xml",
+            "tms_shipment/static/src/js/tms_kanban.js",
+            "tms_shipment/static/src/views/fields/many2many_trip_field.js",
+            "tms_shipment/static/src/views/fields/many2many_trip_field.scss",
+            "tms_shipment/static/src/views/fields/many2many_trip_field.xml",
+            
+        ],
+    },
     'data': [
         "security/ir.model.access.csv",
         'views/res_partner_views.xml',
