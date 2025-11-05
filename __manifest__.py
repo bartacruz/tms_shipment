@@ -34,6 +34,7 @@ Truck shipment support for TMS
         "security/ir.model.access.csv",
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
+        'views/tms_driver_location_views.xml',
         'views/tms_order_views.xml',
         'views/tms_stage_views.xml',
         'wizard/sale_order_trip.xml',

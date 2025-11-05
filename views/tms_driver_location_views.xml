@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="tms_driver_location_view_tree" model="ir.ui.view">
+        <field name="name">tms_driver_location.view.tree</field>
+        <field name="model">tms.driver.location</field>
+        <field name="arch" type="xml">
+            <tree string="Driver Locations">
+                <field name="name" />
+                <field name="sequence" />
+                <field name="active" />
+                <field name="is_default" />
+                <field name="fold" />
+            </tree>
+        </field>
+    </record>
+    <record id="tms_driver_location_view_form" model="ir.ui.view">
+        <field name="name">tms_driver_location.view.form</field>
+        <field name="model">tms.driver.location</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1" />
+                            <field name="name" />
+                            <field name="sequence" />
+                        </group>
+                        <group>
+                            
+                            <field name="is_default" />
+                            <field name="fold" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>                        
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- <record id="view_tms_driver_form_inherit_tms_shipment" model="ir.ui.view">
+        <field name="name">tms.driver.form.inherit.tms_shipment</field>
+        <field name="model">tms.driver</field>
+        <field name="inherit_id" ref="tms.view_tms_driver_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_training']" position="after">
+                <field name="driver_location_id" />
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="view_tms_driver_kanban_inherit_tms_shipment" model="ir.ui.view">
+        <field name="name">tms.driver.kanban.inherit.tms_shipment</field>
+        <field name="model">tms.driver</field>
+        <field name="inherit_id" ref="tms.view_tms_driver_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by" >driver_location_id</attribute>
+                <attribute name="group_create" >True</attribute>
+                <attribute name="group_edit" >True</attribute>
+                <attribute name="create" >False</attribute>
+                <attribute name="class">o_kanban_small_column</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_image')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="view_tms_driver_location_search" model="ir.ui.view">
+        <field name="name">tms.driver.location.search</field>
+        <field name="model">tms.driver.location</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- <filter
+                    name="has_drivers"
+                    string="Has Drivers"
+                    domain="[('driver__count', '>', 0)]"
+                /> -->
+                <filter
+                    name="is_active"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_tms_driver_locations" model="ir.actions.act_window">
+        <field name="name">Driver Locations</field>
+        <field name="res_model">tms.driver.location</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Driver Location.
+            </p>
+        </field>
+    </record>
+    <menuitem
+        id="menu_tms_driver_locations"
+        name="Driver Locations"
+        action="action_tms_driver_locations"
+        parent="tms.config"
+        sequence="19"
+    />
+</odoo>

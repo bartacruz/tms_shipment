@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_tms_order_tms_user,sale.order.trip,model_sale_order_trip,tms.group_tms_user,1,1,1,0
-access_tms_order_tms_user,sale.order.trip,model_sale_order_trip,tms.group_tms_admin,1,1,1,1
+access_tms_order_tms_admin,sale.order.trip,model_sale_order_trip,tms.group_tms_admin,1,1,1,1
+access_tms_driver_location_tms_user,tms.driver.location,model_tms_driver_location,tms.group_tms_user,1,1,1,0
+access_tms_driver_location_tms_admin,tms.driver.location,model_tms_driver_location,tms.group_tms_admin,1,1,1,1
