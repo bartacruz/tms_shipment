@@ -29,9 +29,9 @@ class TMSOrder(models.Model):
     is_active = fields.Boolean(related='stage_id.is_active')
     cpe = fields.Many2one("account.cpe","Carta de Porte",ondelete="set null")
     
-    def _compute_display_name(self):
-        for record in self:
-            record.display_name = record.driver_id.name or record.name
+    # def _compute_display_name(self):
+    #     for record in self:
+    #         record.display_name = record.driver_id.name or record.name
     def _compute_tms_color(self):
         for record in self:
             if not record.driver_id:

@@ -27,6 +27,7 @@ class TMSDriverLocation(models.Model):
         "Color Code", default="#FFFFFF", help="Use Hex Code only Ex:-#FFFFFF"
     )
     
+    @api.depends('driver_ids')
     def _compute_driver_count(self):
         for record in self:
             record.driver_count = len(record.driver_ids)

@@ -31,7 +31,7 @@
                 <field name="sale_id" optional="hide" readonly="True"/>
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="attributes">
-                <attribute name="domain">[('driver_location_id','>',1)]</attribute>
+                <attribute name="domain">[('driver_location_id','>',1),('active_tms_order_id','=',None)]</attribute>
                 <attribute name="context">{'order_display': 'driver_location_id,sequence'}</attribute>
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="after">

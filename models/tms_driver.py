@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 class TMSDriver(models.Model):
     _inherit = "tms.driver"
     _order = "driver_location_id,sequence, name, id"
+    
     def _default_driver_location_id(self):
         return self.env["tms.driver.location"].search([],
             order="sequence asc",
@@ -19,11 +20,10 @@ class TMSDriver(models.Model):
         group_expand="_read_group_driver_location_ids",
     
     )
-    # active_tms_order_id = fields.Many2one("tms.order", compute="_compute_active_tms_order", store=True)
+    active_tms_order_id = fields.Many2one("tms.order", compute="_compute_active_tms_order", store=True)
     sequence = fields.Integer(default=100)
     
     def write(self, values):
-        print("on write ",self.id)
         location_id = values.get('driver_location_id')
         if location_id:
             print(location_id,self.driver_location_id, self._default_driver_location_id(),values.get('sequence'), self.sequence)
@@ -49,5 +49,7 @@ class TMSDriver(models.Model):
             # active = [x for x in record.trips_ids if x.stage_id.is_active]
             # active.append(None)
             # print(active)
-            record.active_tms_order_id = record.trips_ids.search([('is_active','=',True)],limit=1)
+            record.active_tms_order_id = record.trips_ids.search([('driver_id','=',record.id),('is_active','=',True)],limit=1)
+            if record.active_tms_order_id:
+                record.driver_location_id = 1
             

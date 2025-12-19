@@ -13,6 +13,7 @@
             </xpath>
             <xpath expr="//field[@name='stage_id']" position="after">
                 <field name="driver_location_id" optional="show"/>
+                <field name="active_tms_order_id"/>
             </xpath>
         </field>
     </record>    
@@ -21,11 +22,16 @@
         <field name="model">tms.driver</field>
         <field name="inherit_id" ref="tms.view_tms_driver_kanban"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='mobile']" position="after">
+                <field name="active_tms_order_id" />
+            </xpath>
+            <xpath expr="//div[@t-attf-class='oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card']" position="attributes">
+                <attribute name="t-attf-class">oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card #{record.active_tms_order_id.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}</attribute>                
+            </xpath>
             <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace">
-                <!-- <div class="oe_kanban_bottom_left">
-                    <field name="sequence" />
-                </div>
-                 -->
+                <div t-if="record.active_tms_order_id.raw_value" class="oe_kanban_bottom_left">
+                    <field name="active_tms_order_id" />
+                </div>        
             </xpath>
         </field>
     </record>
