@@ -14,7 +14,7 @@ Truck shipment support for TMS
     "version": "17.0.1.0.4",
     "license": "AGPL-3",
 
-    'depends': ['tms','tms_sale'],
+    'depends': ['tms','tms_sale','l10n_ar_afip_cpe'],
     "assets": {
         "web.assets_backend": [
             "tms_shipment/static/src/js/driver_list.js",

@@ -27,6 +27,7 @@ class TMSOrder(models.Model):
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
+    cpe = fields.Many2one("account.cpe","Carta de Porte",ondelete="set null")
     
     def _compute_display_name(self):
         for record in self:
@@ -78,4 +79,13 @@ class TMSOrder(models.Model):
             "target": "new",
             "views": [[vid, "form"]],
             "context": {"is_modal": True},
+        }
+    def action_open_record_form(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Detalle del viaje',
+            'res_model': 'tms.order',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'current',
         }

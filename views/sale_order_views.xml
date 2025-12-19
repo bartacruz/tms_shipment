@@ -126,7 +126,7 @@
         name="Orders"
         action="action_tms_dash_sale"
         parent="tms.dashboard"
-        sequence="19"
+        sequence="21"
     />
 
 </odoo>
