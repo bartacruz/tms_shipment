@@ -16,14 +16,14 @@
                     </td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody t-ref="drivers">
                 <tr>
                     <td>
                         <input class="o_input w-100" placeholder="Filter drivers" t-model="state.searchString"/>
                     </td>
                 </tr>
-                <tr t-foreach="displayedPartners" t-as="partner" t-key="partner.id" class="o_tms_driver_hover">
-                    <td class="cursor-pointer" t-esc="partner.display_name" t-on-click="() => props.selectDriver(partner.id, partner.display_name)" />
+                <tr t-foreach="displayedPartners" t-as="partner" t-key="partner.id"  class="o_tms_driver_hover driver">
+                    <td class="cursor-pointer" t-att-sarasa="partner.id" t-esc="partner.display_name" t-on-click="() => props.selectDriver(partner.id, partner.display_name)" draggable="true" t-on-dragstart="onDrag"/>
                 </tr>
             </tbody>
         </table>

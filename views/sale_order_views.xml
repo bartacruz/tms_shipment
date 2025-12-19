@@ -108,6 +108,19 @@
         />
     </record>
 
+    <record id="view_order_form_inherit_tms_shipment" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.tms_shipment</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='order_lines']" position="before">
+                <page string="Viajes" name="tms_orders">
+                    <field name="tms_order_ids" mode="tree" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+
     <menuitem
         id="menu_tms_dash_sale"
         name="Orders"

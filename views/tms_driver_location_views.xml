@@ -57,6 +57,9 @@
         <field name="model">tms.driver</field>
         <field name="inherit_id" ref="tms.view_tms_driver_kanban"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='avatar_128']" position="after">
+                <field name="driver_location_id" />
+            </xpath>
             <xpath expr="//kanban" position="attributes">
                 <attribute name="default_group_by" >driver_location_id</attribute>
                 <attribute name="group_create" >True</attribute>

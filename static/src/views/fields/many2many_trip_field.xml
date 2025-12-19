@@ -3,7 +3,7 @@
 
     <t t-name="tms_shipment.Many2ManyTripField">
         <div
-            class="facu-mosca many2many_trip_field_container o_field_tags d-flex flex-column flex-wrap mw-100 gap-1"
+            class="facu-hermoso facu-densiing many2many_trip_field_container o_field_tags d-flex flex-column flex-wrap mw-100 gap-1"
             t-att-class="{'o_tags_input o_input': !props.readonly}"
             t-ref="many2ManyTagsField"
         >
@@ -58,7 +58,11 @@
                     
                     class="o_tag_badge_text text-truncate o_tag_text"
                     t-att-class="{'position-relative ms-1' : tag.img}"
-                    t-out="tag.text"/>
+                    t-out="tag.text"
+                    t-on-dragenter="onDragEnter"
+                    t-on-dragleave="onDragLeave"
+                    t-on-drop="onDrop"
+                    />
                 <div
                     class="o_tag_badge_text text-truncate o_tag_assign">
                     (Asignar)

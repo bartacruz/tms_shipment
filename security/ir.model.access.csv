@@ -3,3 +3,5 @@ access_tms_order_tms_user,sale.order.trip,model_sale_order_trip,tms.group_tms_us
 access_tms_order_tms_admin,sale.order.trip,model_sale_order_trip,tms.group_tms_admin,1,1,1,1
 access_tms_driver_location_tms_user,tms.driver.location,model_tms_driver_location,tms.group_tms_user,1,1,1,0
 access_tms_driver_location_tms_admin,tms.driver.location,model_tms_driver_location,tms.group_tms_admin,1,1,1,1
+access_tms_order_tag_tms_user,tms.order.tag,model_tms_order_tag,tms.group_tms_user,1,1,1,0
+access_tms_order_tag_tms_admin,tms.order.tag,model_tms_order_tag,tms.group_tms_admin,1,1,1,1

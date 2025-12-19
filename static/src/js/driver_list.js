@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, useState} from "@odoo/owl";
+import { Component, onWillStart, useState,useRef } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { Pager } from "@web/core/pager/pager";
@@ -30,6 +30,9 @@ export class DriverList extends Component {
             this.partners.data = records;
             this.pager.total = length;
         })
+        this.onDrag = function(ev){
+            console.debug("onDrag",this,ev);
+        }
     }
 
     get displayedPartners() {

@@ -18,6 +18,10 @@
     }
 
 }
+.o_sarasa {
+    border: 3px dashed #71639e;
+    border-radius:3px;
+}
 
 .o_kanban_record, .o_activity_record  {
     @include media-breakpoint-up(sm) {

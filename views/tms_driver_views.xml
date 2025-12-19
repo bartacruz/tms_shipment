@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_tms_driver_tree_inherit_module_name" model="ir.ui.view">
+        <field name="name">tms.driver.view.tree.inherit</field>
+        <field name="model">tms.driver</field>
+        <field name="inherit_id" ref="tms.view_tms_driver_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="before">
+                <field name="sequence" widget="handle"/>
+            </xpath>
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <field name="driver_location_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>    
+    <record id="view_tms_driver_kanban_inherit_module_name" model="ir.ui.view">
+        <field name="name">tms.driver.view.kanban.inherit</field>
+        <field name="model">tms.driver</field>
+        <field name="inherit_id" ref="tms.view_tms_driver_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_kanban_bottom_left']" position="replace">
+                <!-- <div class="oe_kanban_bottom_left">
+                    <field name="sequence" />
+                </div>
+                 -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

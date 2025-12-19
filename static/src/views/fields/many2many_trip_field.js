@@ -21,7 +21,7 @@ export class Many2ManyTripField extends Many2ManyTagsField {
         withCommand: { type: Boolean, optional: true },
     };
     getTagProps(record) {
-        console.debug("record:",record);
+        console.debug("record:", record);
         var driver = record.data.driver_id ? record.data.driver_id[1] : false;
         var vehicle = record.data.vehicle_id ? record.data.vehicle_id[1] : false;
         return {
@@ -29,7 +29,7 @@ export class Many2ManyTripField extends Many2ManyTagsField {
             img: `/web/image/${this.relation}/${record.resId}/avatar_128`,
             driver: driver,
             vehicle: vehicle,
-            
+
         };
     }
 }
@@ -38,9 +38,9 @@ export const many2ManyTripField = {
     ...many2ManyTagsField,
     component: Many2ManyTripField,
     relatedFields: (fieldInfo) => {
-        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "driver_id", type: "many2one" },{ name: "vehicle_id", type: "many2one" },];
+        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "driver_id", type: "many2one" }, { name: "vehicle_id", type: "many2one" },];
     },
-    
+
     extractProps({ viewType }, dynamicInfo) {
         const props = many2ManyTagsField.extractProps(...arguments);
         props.withCommand = viewType === "form" || viewType === "list";
@@ -112,10 +112,27 @@ export class KanbanMany2ManyTripFieldTagsList extends TagsList {
     };
     setup() {
         super.setup();
+
         this.popover = usePopover(Many2ManyTripFieldPopover, {
             popoverClass: "o_m2m_trip_field_popover",
             closeOnClickAway: (target) => !target.closest(".modal"),
         });
+        this.onDropa = function (ev) {
+            console.debug("onDropa", ev);
+        }
+        this.onDrop = function (ev) {
+            console.debug("onDrop XXXXXXX", ev);
+        }
+        this.onDragEnter = function (ev) {
+            console.debug("onDragEnter", this, ev);
+            var $target = $(ev.target);
+            $target.parent().addClass('o_sarasa');
+        }
+        this.onDragLeave = function (ev) {
+            console.debug("onDragLeave", this, ev);
+            var $target = $(ev.target);
+            $target.parent().removeClass('o_sarasa');
+        }
     }
     get visibleTagsCount() {
         return this.props.itemsVisible;

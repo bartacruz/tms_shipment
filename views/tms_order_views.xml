@@ -6,18 +6,54 @@
         <field name="model">tms.order</field>
         <field name="inherit_id" ref="tms.tms_order_view_tree" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='start_trip']" position="before">
+                <header>
+                    <button name="action_create_tms_order" type="object"
+                        class="o_button_create_tms_sale btn-primary" string="Nuevo"
+                        display="always" />
+                </header>
+                
+            </xpath>
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable">top</attribute>
+                <attribute name="create">0</attribute>
             </xpath>
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
+                <field name="scheduled_date_start" />
                 <field name="customer_id" />
-                <field name="sale_id" optional="hide"/>
+                <field name="origin_id" />
+                <field name="destination_id" />
+                <field name="sale_id" optional="hide" />
+            </xpath>
+            <xpath expr="//field[@name='driver_id']" position="attributes">
+                <attribute name="domain">[('driver_location_id','>',1)]</attribute>
+                <attribute name="context">{'order_display': 'driver_location_id,sequence'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="vehicle_id" />
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </xpath>
             <xpath expr="//button[@name='button_end_order']" position="after">
-                <field name="description" optional="show"/>
+                <field name="description" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tms_shipment_view_tms_order_search" model="ir.ui.view">
+        <field name="name">tms.order.view.search</field>
+        <field name="model">tms.order</field>
+        <field name="inherit_id" ref="tms.view_tms_order_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <field name="driver_id" />
+                <field name="vehicle_id" />
+                <group expand="1" string="Group by">
+                    <filter string="Customer" name="customer" context="{'group_by': 'customer_id'}" />
+                    <filter string="Stage" name="stage_id" context="{'group_by': 'stage_id'}" />
+                </group>
             </xpath>
         </field>
     </record>
@@ -30,6 +66,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="customer_id" />
+            </xpath>
+            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']" position="attributes">
+                <attribute name="domain">[('tms_location','=',True),('parent_id','=',customer_id)]</attribute>
+            </xpath>
+            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']" position="attributes">
+                <attribute name="domain">[('tms_location','=',True),('parent_id','=',None)]</attribute>
             </xpath>
         </field>
     </record>

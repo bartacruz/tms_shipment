@@ -9,7 +9,7 @@
                 <div class="oe_title">
                     <label for="partner_id" class="oe_edit_only" string="Customer" />
                     <h2>
-                        <field name="partner_id" domain="[('is_company','=',True)]" />
+                        <field name="partner_id" domain="[('is_company','=',True),('parent_id','=',None)]" />
                     </h2>
                 </div>
                 <group
@@ -63,7 +63,8 @@
                         <field name="product_id" filter_domain="[('tms_trip','=',True)]"/>
                     </group>
                     <group>
-                        <field name="qty" />    
+                        <field name="qty" />
+                        <field name="distance" />
                     </group>
                 </group>
                 
