@@ -10,7 +10,6 @@
                 group_create="False"
                 group_edit="False"
                 create="0"
-                js_class="tms_kanban"
             >
                 <field name="partner_id" />
                 <field name="tms_origin_id" />
