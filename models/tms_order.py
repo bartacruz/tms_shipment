@@ -24,14 +24,21 @@ class TMSOrder(models.Model):
     _inherit = "tms.order"
 
     customer_id = fields.Many2one("res.partner", _("Customer"), related="sale_id.partner_id", store=True)
+    sale_order_label = fields.Char("Pedido", compute = '_compute_sale_order_label', store=True, readonly=True)
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
-    cpe = fields.Many2one("account.cpe","Carta de Porte",ondelete="set null")
+    #cpe = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
     # def _compute_display_name(self):
     #     for record in self:
     #         record.display_name = record.driver_id.name or record.name
+    
+    @api.depends('sale_id')
+    def _compute_sale_order_label(self):
+        for record in self:
+            record.sale_order_label = '%s - %s' % (record.sale_id.name,record.sale_id.partner_id.name,)
+        
     def _compute_tms_color(self):
         for record in self:
             if not record.driver_id:
