@@ -38,7 +38,7 @@
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="vehicle_id" />
-                
+                <field name="cpe_id" />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </xpath>
             <xpath expr="//button[@name='button_end_order']" position="after">
@@ -75,11 +75,17 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="customer_id" />
             </xpath>
+            <field name="driver_id" position="after">
+                <field name="cpe_id"/>
+            </field>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']" position="attributes">
                 <attribute name="domain">[('tms_location','=',True),('parent_id','=',customer_id)]</attribute>
             </xpath>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']" position="attributes">
                 <attribute name="domain">[('tms_location','=',True),('parent_id','=',None)]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='seats_page']" position="replace">
+
             </xpath>
         </field>
     </record>

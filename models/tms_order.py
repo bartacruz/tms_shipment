@@ -28,7 +28,7 @@ class TMSOrder(models.Model):
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
-    #cpe = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
+    cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
     # def _compute_display_name(self):
     #     for record in self:
@@ -51,6 +51,12 @@ class TMSOrder(models.Model):
                 else:
                     record.color = 7
 
+    @api.onchange('cpe_id')
+    def _onchange_cpe(self):
+        for record in self:
+            if record.cpe_id and not record.cpe_id.origin_partner_id:
+                record.cpe_id.origin_partner_id = self.customer_id
+    
     @api.model
     def write(self, vals):
         for order in self:
