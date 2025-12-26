@@ -35,4 +35,11 @@
             </xpath>
         </field>
     </record>
+    <menuitem
+        id="menu_tms_dash_drivers"
+        name="Conductores"
+        action="tms.action_tms_driver"
+        parent="tms.dashboard"
+        sequence="21"
+    />
 </odoo>
