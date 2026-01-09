@@ -19,15 +19,6 @@ class ResPartner(models.Model):
             if record.alias_name:
                 record.display_name = "["+record.alias_name+"] " + record.display_name 
     
-    # @api.model
-    # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-    #     query = super()._name_search(name, domain, operator, limit, order)
-    #     if not query:
-    #         self._refresh()
-    #         return super()._name_search(name, domain, operator, limit, order)
-    #     return query
-    # driver_ids = fields.One2many('tms.driver', 'partner_id')
-    # driver_id = fields.Many2one('tms.driver', compute='_compute_driver_id', inverse='_inverse_driver_id')
     
     # @api.depends('driver_ids')
     # def _compute_driver_id(self):
