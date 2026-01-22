@@ -12,7 +12,7 @@ class TMSOrderTag(models.Model):
 
     def _default_color(self):
         return randint(1, 11)
-
+    
     name = fields.Char("Name", required=True, translate=True)
     sequence = fields.Integer('Sequence', default=0)
     color = fields.Integer(
@@ -28,6 +28,7 @@ class TMSOrder(models.Model):
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
+    trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True)
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
     # def _compute_display_name(self):

@@ -16,7 +16,19 @@
                 <field name="active_tms_order_id"/>
             </xpath>
         </field>
-    </record>    
+    </record>
+
+    <!-- <record id="tms_driver_form_inherit_tms_shipment" model="ir.ui.view">
+        <field name="name">tms.driver.form.tms_shipment</field>
+        <field name="model">tms.driver</field>
+        <field name="inherit_id" ref="tms.view_tms_driver_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_external']" position="before">
+                <field name="vehicle_id" />
+            </xpath>
+        </field>
+    </record> -->
+
     <record id="view_tms_driver_kanban_inherit_module_name" model="ir.ui.view">
         <field name="name">tms.driver.view.kanban.inherit</field>
         <field name="model">tms.driver</field>

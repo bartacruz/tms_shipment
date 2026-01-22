@@ -4,15 +4,64 @@
     <record id="fleet_vehicle_view_form_tms_shipment" model="ir.ui.view">
         <field name="name">fleet.vehicle.form.tms_shipment</field>
         <field name="model">fleet.vehicle</field>
-        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
         <field name="arch" type="xml">
-            
+
             <xpath expr="//field[@name='operation']" position="after">
-                <field name="trailer_id" invisible = "operation != 'cargo'"/>
-                <field name="truck_id" invisible = "operation != 'trailer'"/>
+                <field name="trailer_id" invisible="operation != 'cargo'" />
+                <field name="truck_id" invisible="operation != 'trailer'" />
             </xpath>
-            
+
+        </field>
+    </record>
+    
+    <record id="fleet_vehicle_view_kanban_tms_shipment" model="ir.ui.view">
+        <field name="name">fleet.vehicle.kanban.tms_shipment</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by"></attribute>
+                <attribute name="default_order"></attribute>
+            </xpath>
+            <xpath expr="//t[@t-if='record.driver_id.raw_value']" position="replace">
+                <t t-if="record.tms_driver_id.raw_value">
+                    <i class="fa fa-user mx-2" title="Conductor" />
+                    <field name="tms_driver_id" />
+                </t>
+            </xpath>
+            <xpath expr="//ul/li" position="after">
+                <li>
+                    <t t-if="record.trailer_id.raw_value">
+                        <i class="fa fa-paperclip mx-2" title="Trailer" />
+                        <field name="trailer_id" />
+                    </t>
+                </li>
+                <li>
+                    <t t-if="record.truck_id.raw_value">
+                        <i class="fa fa-truck mx-2" title="Truck" />
+                        <field name="truck_id" />
+                    </t>
+                </li>
+            </xpath>
+
         </field>
     </record>
 
+    <record id="fleet_vehicle_view_search_tms_shipment" model="ir.ui.view">
+        <field name="name">fleet.vehicle.search.inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='log_drivers']" position="replace">
+                <field name="tms_driver_id" />
+            </xpath>
+            <xpath expr="//filter[@name='cars']" position="replace">
+                <filter string="Camiones" name="cargos" domain="[('operation', '=', 'cargo')]" />
+            </xpath>
+            <xpath expr="//filter[@name='bikes']" position="replace">
+                <filter string="Trailers" name="trailers" domain="[('operation', '=', 'trailer')]" />
+            </xpath>
+        </field>
+    </record>
 </odoo>

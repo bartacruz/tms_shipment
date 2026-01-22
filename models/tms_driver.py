@@ -20,9 +20,31 @@ class TMSDriver(models.Model):
         group_expand="_read_group_driver_location_ids",
     
     )
+    vehicle_ids = fields.One2many("fleet.vehicle", "tms_driver_id")
+    vehicle_id = fields.Many2one('fleet.vehicle',compute='_compute_tms_vehicle', inverse='_inverse_tms_vehicle', domain="[('operation','=','cargo')]")
+
     active_tms_order_id = fields.Many2one("tms.order", compute="_compute_active_tms_order", store=True)
     sequence = fields.Integer(default=100)
     
+    @api.depends('vehicle_ids')
+    def _compute_tms_vehicle(self):
+        for record in self:
+            vehicles = [ x for x in record.vehicle_ids if x.operation == 'cargo']
+            if len(vehicles) > 0:
+                record.vehicle_id = vehicles[0].id
+            else:
+                record.vehicle_id = False
+    
+    def _inverse_tms_vehicle(self):
+        for record in self:
+            old = record.env['fleet.vehicle'].search([ ('tms_driver_id','=',record.id) ])
+            old.tms_driver_id=False
+            print("inv vehicle. old:",old,"new:",record.vehicle_id)
+            if record.vehicle_id:
+                record.vehicle_id.tms_driver_id=record.id
+                record.vehicle_id.trailer_id.tms_driver_id=record.id
+                
+        
     def write(self, values):
         location_id = values.get('driver_location_id')
         if location_id:
