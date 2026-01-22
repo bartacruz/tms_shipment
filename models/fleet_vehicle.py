@@ -17,7 +17,7 @@ class FleetVehicle(models.Model):
                 record.tms_driver_id = record.truck_id.tms_driver_id
             else:
                 record.truck_id = False
-                if record.opeation == 'trailer':
+                if record.operation == 'trailer':
                     record.driver_id = False
                     record.tms_driver_id = False
     

@@ -56,12 +56,15 @@
             <xpath expr="//field[@name='log_drivers']" position="replace">
                 <field name="tms_driver_id" />
             </xpath>
-            <xpath expr="//filter[@name='cars']" position="replace">
+            <xpath expr="//filter[@name='cars']" position="after">
                 <filter string="Camiones" name="cargos" domain="[('operation', '=', 'cargo')]" />
             </xpath>
-            <xpath expr="//filter[@name='bikes']" position="replace">
+            <xpath expr="//filter[@name='bikes']" position="after">
                 <filter string="Trailers" name="trailers" domain="[('operation', '=', 'trailer')]" />
             </xpath>
+            <xpath expr="//filter[@name='bikes']" position="replace"></xpath>
+            <xpath expr="//filter[@name='cars']" position="replace"></xpath>
+            <xpath expr="//filter[@name='trailer_hook']" position="replace"></xpath>
         </field>
     </record>
 </odoo>
