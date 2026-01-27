@@ -33,8 +33,8 @@
 
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="attributes">
-                <attribute name="domain">[('driver_location_id','>',1),('active_tms_order_id','=',None)]</attribute>
-                <attribute name="context">{'order_display': 'driver_location_id,sequence', 'default_is_external':False}</attribute>
+                <!-- <attribute name="domain">[('driver_location_id','>',1),('active_tms_order_id','=',None)]</attribute> -->
+                <attribute name="context">{'order_display': 'stage_id,sequence', 'default_is_external':False}</attribute>
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="vehicle_id" />

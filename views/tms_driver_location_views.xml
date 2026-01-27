@@ -41,36 +41,6 @@
         </field>
     </record>
 
-    <!-- <record id="view_tms_driver_form_inherit_tms_shipment" model="ir.ui.view">
-        <field name="name">tms.driver.form.inherit.tms_shipment</field>
-        <field name="model">tms.driver</field>
-        <field name="inherit_id" ref="tms.view_tms_driver_form_inherit"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_training']" position="after">
-                <field name="driver_location_id" />
-            </xpath>
-        </field>
-    </record> -->
-
-    <record id="view_tms_driver_kanban_inherit_tms_shipment" model="ir.ui.view">
-        <field name="name">tms.driver.kanban.inherit.tms_shipment</field>
-        <field name="model">tms.driver</field>
-        <field name="inherit_id" ref="tms.view_tms_driver_kanban"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='avatar_128']" position="after">
-                <field name="driver_location_id" />
-            </xpath>
-            <xpath expr="//kanban" position="attributes">
-                <attribute name="default_group_by" >driver_location_id</attribute>
-                <attribute name="group_create" >True</attribute>
-                <attribute name="group_edit" >True</attribute>
-                <attribute name="create" >False</attribute>
-                <attribute name="class">o_kanban_small_column</attribute>
-            </xpath>
-            <xpath expr="//div[hasclass('o_kanban_image')]" position="replace"/>
-        </field>
-    </record>
-
     <record id="view_tms_driver_location_search" model="ir.ui.view">
         <field name="name">tms.driver.location.search</field>
         <field name="model">tms.driver.location</field>

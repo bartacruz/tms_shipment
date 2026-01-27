@@ -3,7 +3,7 @@ from odoo import _, api, fields, models
 
 class TMSDriver(models.Model):
     _inherit = "tms.driver"
-    _order = "driver_location_id,sequence, name, id"
+    _order = "stage_id,sequence, name, id"
     
     def _default_driver_location_id(self):
         return self.env["tms.driver.location"].search([],
@@ -22,7 +22,7 @@ class TMSDriver(models.Model):
     )
     vehicle_ids = fields.One2many("fleet.vehicle", "tms_driver_id")
     vehicle_id = fields.Many2one('fleet.vehicle',compute='_compute_tms_vehicle', inverse='_inverse_tms_vehicle', domain="[('operation','=','cargo')]")
-
+    trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True, store=True)
     active_tms_order_id = fields.Many2one("tms.order", compute="_compute_active_tms_order", store=True)
     sequence = fields.Integer(default=100)
     
