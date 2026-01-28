@@ -80,6 +80,7 @@
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <search>
+                <filter string="Hoy" name="filter_today_creation" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
                 <filter string="Active" name="tms_sale" domain="[('state', '=', 'sale'),]" />
             </search>
         </field>

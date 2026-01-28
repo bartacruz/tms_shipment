@@ -28,13 +28,28 @@ class TMSOrder(models.Model):
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
+    is_completed = fields.Boolean(related='stage_id.is_completed')
     trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True)
+    vehicle_label = fields.Char(compute='_compute_vehicle_label',readonly=True, store=True)
+    contact_phone = fields.Char(related='customer_id.phone')
+    driver_phone =  fields.Char(related='driver_id.phone')
+    
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
     # def _compute_display_name(self):
     #     for record in self:
     #         record.display_name = record.driver_id.name or record.name
     
+    @api.depends('driver_id','vehicle_id')
+    def _compute_vehicle_label(self):
+        for record in self:
+            if not record.vehicle_id and record.driver_id:
+                record.vehicle_id = record.driver_id.vehicle_id
+            record.vehicle_label = record.vehicle_id.license_plate
+            if record.trailer_id:
+                record.vehicle_label += ' ' + record.trailer_id.license_plate
+            print(record.vehicle_label)
+                
     @api.depends('sale_id')
     def _compute_sale_order_label(self):
         for record in self:
@@ -103,3 +118,8 @@ class TMSOrder(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+        
+    def _whatsapp_get_partner(self):
+        if "customer_id" in self._fields:
+            return self.customer_id
+        return super()._whatsapp_get_partner()

@@ -6,7 +6,7 @@ class SaleOrderTrip(models.TransientModel):
 
     order_id = fields.Many2one('sale.order', string="Order")
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
-    product_id = fields.Many2one('product.product')
+    product_id = fields.Many2one('product.product', default=10)
     has_route = fields.Boolean(string="Use Routes")
     route = fields.Many2one("tms.route")
     origin = fields.Many2one(

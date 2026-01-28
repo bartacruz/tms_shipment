@@ -30,6 +30,8 @@
                 <field name="origin_id" readonly="True" />
                 <field name="destination_id" readonly="True"/>
                 <field name="sale_id" optional="hide" readonly="True"/>
+                <field name="is_active" optional="hide" readonly="True"/>
+                <field name="is_completed" optional="hide" readonly="True"/>
 
             </xpath>
             <xpath expr="//field[@name='driver_id']" position="attributes">
@@ -39,6 +41,7 @@
             <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="vehicle_id" />
                 <field name="trailer_id" />
+                <field name="vehicle_label" optional='hide'/>
                 <field name="cpe_id" />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </xpath>
@@ -58,6 +61,9 @@
             <xpath expr="//field[@name='stage_id']" position="after">
                 <field name="driver_id" />
                 <field name="vehicle_id" />
+                <filter string="Hoy" name="filter_today_creation" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+
+                <filter string="Fecha" name="filter_create_date" date="create_date"/>
                 <group expand="1" string="Group by">
                     <filter string="Pedido" name="sale" context="{'group_by': 'sale_order_label'}" />
                     <filter string="Customer" name="customer" context="{'group_by': 'customer_id'}" />
@@ -78,7 +84,11 @@
             </xpath>
             <field name="driver_id" position="after">
                 <field name="cpe_id"/>
+            
             </field>
+            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']" position="before">
+                <field name="contact_phone" widget="phone" />
+            </xpath>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']" position="attributes">
                 <attribute name="domain">[('tms_location','=',True),('parent_id','=',customer_id)]</attribute>
             </xpath>
@@ -119,6 +129,23 @@
 
     </record>
     
+    <!-- <record id="tms_order_driver_graph" model="ir.ui.view">
+        <field name="name">tms.order.driver.graph</field>
+        <field name="model">tms.order</field>
+        <field name="arch" type="xml">
+            <graph string="Trip Reports" type="bar" domain="[('date_start','!=',False)]">
+                <field name="driver_id" string="Conductor" type="row" />
+                <field name="date_start" string="Mes" interval="month"/>
+                <field name="duration" type="measure" />
+            </graph>
+        </field>
+    </record>
+    <record id="action_tms_report_driver" model="ir.actions.act_window">
+        <field name="name">Choferes</field>
+        <field name="res_model">tms.order</field>
+        <field name="view_mode">graph</field>
+    </record> -->
+
     <menuitem
         id="menu_tms_dash_cpe"
         name="CPE"
@@ -126,4 +153,12 @@
         parent="tms.dashboard"
         sequence="21"
     />
+    <!-- <menuitem
+        id="menu_tms_report_driver"
+        name="Choferes"
+        action="action_tms_report_driver"
+        parent="tms.reporting"
+        sequence="10"
+    /> -->
+    
 </odoo>
