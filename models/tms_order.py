@@ -31,11 +31,23 @@ class TMSOrder(models.Model):
     is_completed = fields.Boolean(related='stage_id.is_completed')
     trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True)
     vehicle_label = fields.Char(compute='_compute_vehicle_label',readonly=True, store=True)
-    contact_phone = fields.Char(related='customer_id.phone')
-    driver_phone =  fields.Char(related='driver_id.phone')
+    contact_phone = fields.Char(compute = '_compute_contact_phone')
+    driver_phone =  fields.Char(compute='_compute_driver_phone')
     
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
+    @api.depends('customer_id')
+    def _compute_contact_phone(self):
+        for record in self:
+            if not record.contact_phone:
+                record.contact_phone = record.customer_id.mobile or record.customer_id.phone or False
+
+    @api.depends('driver_id')
+    def _compute_driver_phone(self):
+        for record in self:
+            if not record.driver_phone:
+                record.driver_phone = record.driver_id.mobile or record.driver_id.phone or False
+
     # def _compute_display_name(self):
     #     for record in self:
     #         record.display_name = record.driver_id.name or record.name
@@ -66,7 +78,10 @@ class TMSOrder(models.Model):
                     record.color = 2
                 else:
                     record.color = 7
-
+    @api.onchange('driver_id')
+    def _onchange_driver_id(self):
+        print("onchange driver",self.driver_id.vehicle_id)
+        self.vehicle_id = self.driver_id.vehicle_id
     @api.onchange('cpe_id')
     def _onchange_cpe(self):
         for record in self:
