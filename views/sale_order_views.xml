@@ -58,6 +58,9 @@
                                             t-esc="record.tms_destination_id.value"
                                         />
                                     </div>
+                                    <div class="text-muted o_row">
+                                        <field name="create_date" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="o_tms_orders">

@@ -18,18 +18,19 @@
         </field>
     </record>
 
-    <record id="tms_driver_form_inherit_tms_shipment" model="ir.ui.view">
+    <!-- <record id="tms_driver_form_inherit_tms_shipment" model="ir.ui.view">
         <field name="name">tms.driver.form.tms_shipment</field>
         <field name="model">tms.driver</field>
-        <field name="priority" eval="100"/>
+        <field name="priority" eval="1000"/>
         <field name="inherit_id" ref="tms.view_tms_driver_form_inherit"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='tms_driver_id']" position="replace"/>
             <xpath expr="//field[@name='is_external']" position="before">
                 <field name="vehicle_id" />
+                <field name="trailer_id" readonly="True"/>
             </xpath>
         </field>
     </record>
+         -->
 
     <record id="view_tms_driver_kanban_tms_shipment" model="ir.ui.view">
         <field name="name">tms.driver.view.kanban.inherit</field>

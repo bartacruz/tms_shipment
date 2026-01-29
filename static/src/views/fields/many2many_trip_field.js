@@ -24,11 +24,13 @@ export class Many2ManyTripField extends Many2ManyTagsField {
         console.debug("record:", record);
         var driver = record.data.driver_id ? record.data.driver_id[1] : false;
         var vehicle = record.data.vehicle_id ? record.data.vehicle_id[1] : false;
+        var trailer = record.data.trailer_id ? record.data.trailer_id[1] : false;
         return {
             ...super.getTagProps(record),
             img: `/web/image/${this.relation}/${record.resId}/avatar_128`,
             driver: driver,
             vehicle: vehicle,
+            trailer: trailer,
 
         };
     }
@@ -38,7 +40,7 @@ export const many2ManyTripField = {
     ...many2ManyTagsField,
     component: Many2ManyTripField,
     relatedFields: (fieldInfo) => {
-        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "driver_id", type: "many2one" }, { name: "vehicle_id", type: "many2one" },];
+        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "driver_id", type: "many2one" }, { name: "vehicle_id", type: "many2one" }, { name: "trailer_id", type: "many2one" },];
     },
 
     extractProps({ viewType }, dynamicInfo) {

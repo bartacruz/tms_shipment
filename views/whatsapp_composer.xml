@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record model="ir.actions.act_window" id="mail_gateway_whatsapp.whatsapp_composer_act_window">
+        <field name="context">{'default_gateway_id':1,'default_template_id':7}</field>
+    </record>
+    
+</odoo>

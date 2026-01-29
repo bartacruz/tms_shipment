@@ -22,9 +22,9 @@ class TMSOrderTag(models.Model):
 
 class TMSOrder(models.Model):
     _inherit = "tms.order"
-
+    
     customer_id = fields.Many2one("res.partner", _("Customer"), related="sale_id.partner_id", store=True)
-    sale_order_label = fields.Char("Pedido", compute = '_compute_sale_order_label', store=True, readonly=True)
+    sale_order_label = fields.Char("Pedido", compute = '_compute_sale_order_label', store=True, readonly=True, group_expand='_sale_id_expand_groups')
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
@@ -35,6 +35,11 @@ class TMSOrder(models.Model):
     driver_phone =  fields.Char(compute='_compute_driver_phone')
     
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
+    
+    @api.model
+    def _sale_id_expand_groups(self, records, domain, order):
+        print("_expand_", records,domain,order)
+        return records[::-1]
     
     @api.depends('customer_id')
     def _compute_contact_phone(self):
