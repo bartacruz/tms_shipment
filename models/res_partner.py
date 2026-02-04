@@ -30,6 +30,15 @@ class ResPartner(models.Model):
             else:
                 record.tms_driver_id = False
     
+    def action_view_cpe(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "afip.cpe",
+            "view_mode": "tree,form",
+            "domain": [("participants_ids", "in", self.id)],
+            "name": "CPEs %s" % self.name,
+        }
     # @api.depends('driver_ids')
     # def _compute_driver_id(self):
     #     for record in self:
