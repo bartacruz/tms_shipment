@@ -176,6 +176,21 @@
         parent="tms.dashboard"
         sequence="21"
     />
+    <menuitem
+        id="menu_tms_config_afip_states"
+        name="afip states"
+        action="l10n_ar_afip_cpe.action_afip_states_view"
+        parent="tms.config"
+        sequence="98"
+    />
+    <menuitem
+        id="menu_tms_config_afip_locality"
+        name="afip localities"
+        action="l10n_ar_afip_cpe.action_afip_locality_view"
+        parent="tms.config"
+        sequence="99"
+    />
+
     <!-- <menuitem
         id="menu_tms_report_driver"
         name="Choferes"
