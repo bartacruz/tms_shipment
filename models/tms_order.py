@@ -138,6 +138,23 @@ class TMSOrder(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+    def action_update_from_cpe(self):
+        for record in self:
+            cpe = record.cpe_id
+            if cpe.origin_id:
+                record.origin_id = cpe.origin_id
+            if cpe.destination_id:
+                record.destination_id = cpe.destination_id
+            if cpe.transport_ids:
+                record.vehicle_id = cpe.transport_ids[0].vehicle_id
+                record.date_start = cpe.transport_ids[0].start_date
+                if cpe.status == 'CN':
+                    record.stage_id = self.env.ref("tms.tms_stage_order_completed")
+                    record.end_trip = True
+                    record.date_end = cpe.status_date
+                    
+            
+            
         
     def _whatsapp_get_partner(self):
         if "customer_id" in self._fields:

@@ -105,7 +105,14 @@
             </xpath>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']"
                 position="after">
-                <field name="cpe_id" />
+                <label for="cpe_id" string="Carta de Porte"/>
+                <div>
+                    <field name="cpe_id" />
+                    <button name="action_update_from_cpe" type="object" icon="fa-refresh" string="Actualizar viaje desde la Carta de Porte" 
+                        invisible="not cpe_id"
+                        class="btn btn-link pt-0"/>
+                </div>
+                
             </xpath>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']"
                 position="attributes">
