@@ -32,6 +32,7 @@ Truck shipment support for TMS
     },
     'data': [
         "security/ir.model.access.csv",
+        'views/afip_cpe.xml',
         'views/fleet_vehicle.xml',
         'views/tms_driver_views.xml',
         'views/res_partner_views.xml',
