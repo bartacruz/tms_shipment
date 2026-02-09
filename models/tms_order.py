@@ -87,6 +87,7 @@ class TMSOrder(models.Model):
     def _onchange_driver_id(self):
         print("onchange driver",self.driver_id.vehicle_id)
         self.vehicle_id = self.driver_id.vehicle_id
+    
     @api.onchange('cpe_id')
     def _onchange_cpe(self):
         for record in self:
@@ -152,10 +153,15 @@ class TMSOrder(models.Model):
                     record.stage_id = self.env.ref("tms.tms_stage_order_completed")
                     record.end_trip = True
                     record.date_end = cpe.status_date
-                    
-            
-            
+    
+    @api.model
+    def assign_driver(self,order_id,driver_id):
+        order = self.browse(order_id)
         
+        order.driver_id = int(driver_id)
+        print("Assigned driver %s to order %s" % (driver_id,order_id))
+        return order.id
+    
     def _whatsapp_get_partner(self):
         if "customer_id" in self._fields:
             return self.customer_id

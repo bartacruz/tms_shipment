@@ -23,7 +23,7 @@
                     </td>
                 </tr>
                 <tr t-foreach="displayedPartners" t-as="partner" t-key="partner.id"  class="o_tms_driver_hover driver">
-                    <td class="cursor-pointer" t-att-sarasa="partner.id" t-esc="partner.display_name" t-on-click="() => props.selectDriver(partner.id, partner.display_name)" draggable="true" t-on-dragstart="onDrag"/>
+                    <td class="cursor-pointer" t-att-data-driver-id="partner.id" t-esc="partner.display_name" t-on-click="() => props.selectDriver(partner.id, partner.display_name)" draggable="true" t-on-dragstart="onDrag" t-on-drop="onDrop"/>
                 </tr>
             </tbody>
         </table>

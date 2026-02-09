@@ -27,6 +27,8 @@ Truck shipment support for TMS
             "tms_shipment/static/src/views/fields/many2many_trip_field.js",
             "tms_shipment/static/src/views/fields/many2many_trip_field.scss",
             "tms_shipment/static/src/views/fields/many2many_trip_field.xml",
+            "tms_shipment/static/src/views/fields/trips_field.js",
+            "tms_shipment/static/src/views/fields/trips_field.xml",
             
         ],
     },

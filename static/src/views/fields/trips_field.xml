@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="tms_shipment.TripsField" >
+        <div
+            role="search"
+            class="o_field_trips"
+            t-ref="tripsField"
+            t-on-dragover.prevent="()=>{}"
+            t-on-dragenter.prevent="onDragEnter"
+            t-on-dragleave.prevent="onDragLeave"
+            t-on-drop.prevent="onDrop">
+        <t t-foreach="trips" t-as="trip" t-key="trip.id">
+            <div t-att-class="trip.class" t-att-data-id="trip.resId" t-on-click="onClick">
+                <t t-if="trip.driver">
+                    <span class="m-2" t-out="trip.driver"/>
+                    <span class="m-2" t-out="trip.vehicle" t-if="trip.vehicle"/>
+                    <span class="m-2" t-out="trip.trailer" t-if="trip.trailer"/>
+                </t>
+                <t t-else="">
+                    <div t-out="trip.text"/>    
+                </t>                
+            </div>
+        </t>
+        </div>
+    </t>
+</templates>

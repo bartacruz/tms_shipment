@@ -10,6 +10,7 @@
                 group_create="False"
                 group_edit="False"
                 create="0"
+                js_class="tms_kanban"
             >
                 <field name="partner_id" />
                 <field name="tms_origin_id" />
@@ -68,7 +69,9 @@
                                 <!-- <field name="tms_order_ids"
                                         widget="tms_order_list" options="{'color_field':
                                         'color'}" /> -->
-                                <field name="tms_order_ids" widget="many2many_trip"
+                                <!-- <field name="tms_order_ids" widget="many2many_trip"
+                                    options="{'color_field': 'color'}" /> -->
+                                <field name="tms_order_ids" widget="trips"
                                     options="{'color_field': 'color'}" />
                             </div>
                         </div>

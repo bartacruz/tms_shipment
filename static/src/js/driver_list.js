@@ -32,7 +32,16 @@ export class DriverList extends Component {
         })
         this.onDrag = function(ev){
             console.debug("onDrag",this,ev);
+            const driver_id = ev.srcElement.dataset.driverId;
+            ev.dataTransfer.setData("text",driver_id);
+            ev.dataTransfer.dropEffect = "move";
+            ev.dataTransfer.effectAllowed = "move";
+            console.debug("driver",driver_id);
         }
+        this.onDrop = function(ev){
+            console.debug("onDrop drivers",this,ev);
+        }
+        // this.env.bus.addEventListener('updatesss',this.loadDrivers.bind(this));
     }
 
     get displayedPartners() {
@@ -57,6 +66,7 @@ export class DriverList extends Component {
     }
 
     loadDrivers() {
+        console.debug("loading drivers");
         const { limit, offset } = this.pager;
         const domain = this.state.displayActiveDrivers ? [["is_active", "!=", false]] : [];
         return this.orm.webSearchRead("tms.driver", domain, {
