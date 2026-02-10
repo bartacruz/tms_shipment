@@ -89,11 +89,11 @@ class TMSOrder(models.Model):
         print("onchange driver",self.driver_id.vehicle_id)
         self.vehicle_id = self.driver_id.vehicle_id
     
-    @api.onchange('cpe_id')
-    def _onchange_cpe(self):
-        for record in self:
-            if record.cpe_id and not record.cpe_id.origin_partner_id:
-                record.cpe_id.origin_partner_id = self.customer_id
+    # @api.onchange('cpe_id')
+    # def _onchange_cpe(self):
+    #     for record in self:
+    #         if record.cpe_id and not record.cpe_id.origin_partner_id:
+    #             record.cpe_id.origin_partner_id = self.customer_id
     
     @api.model
     def write(self, vals):
@@ -143,6 +143,9 @@ class TMSOrder(models.Model):
     def action_update_from_cpe(self):
         for record in self:
             cpe = record.cpe_id
+            if cpe.customer_id:
+                record.customer_id = cpe.customer_id
+                record.sale_id.partner_invoice_id = cpe.customer_id
             if cpe.origin_id:
                 record.origin_id = cpe.origin_id
             if cpe.destination_id:
@@ -154,7 +157,13 @@ class TMSOrder(models.Model):
                     record.stage_id = self.env.ref("tms.tms_stage_order_completed")
                     record.end_trip = True
                     record.date_end = cpe.status_date
+                elif cpe.status == 'AN':
+                    record.stage_id = self.env.ref("tms.tms_stage_order_cancelled")
     
+    def button_end_order(self):
+        super().button_end_order()
+        self.stage_id = self.env.ref("tms.tms_stage_order_completed")
+        
     @api.model
     def assign_driver(self,order_id,driver_id):
         order = self.browse(order_id)
