@@ -4,7 +4,7 @@
     <t t-name="tms_shipment.TripsField" >
         <div
             role="search"
-            class="o_field_trips"
+            class="o_field_trips w-100"
             t-ref="tripsField"
             t-on-dragover.prevent="()=>{}"
             t-on-dragenter.prevent="onDragEnter"
@@ -14,8 +14,8 @@
             <div t-att-class="trip.class" t-att-data-id="trip.resId" t-on-click="onClick">
                 <t t-if="trip.driver">
                     <span class="m-2" t-out="trip.driver"/>
-                    <span class="m-2" t-out="trip.vehicle" t-if="trip.vehicle"/>
-                    <span class="m-2" t-out="trip.trailer" t-if="trip.trailer"/>
+                    <!-- <span class="m-2" t-out="trip.vehicle" t-if="trip.vehicle"/>
+                    <span class="m-2" t-out="trip.trailer" t-if="trip.trailer"/> -->
                 </t>
                 <t t-else="">
                     <div t-out="trip.text"/>    

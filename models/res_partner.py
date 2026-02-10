@@ -36,7 +36,7 @@ class ResPartner(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "afip.cpe",
             "view_mode": "tree,form",
-            "domain": [("participants_ids", "in", self.id)],
+            "domain": [("participants_ids", "in", [self.id])],
             "name": "CPEs %s" % self.name,
         }
     # @api.depends('driver_ids')

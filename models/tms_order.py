@@ -29,6 +29,7 @@ class TMSOrder(models.Model):
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
     is_active = fields.Boolean(related='stage_id.is_active')
     is_completed = fields.Boolean(related='stage_id.is_completed')
+    is_cancelled = fields.Boolean(related='stage_id.fold')
     trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True)
     vehicle_label = fields.Char(compute='_compute_vehicle_label',readonly=True, store=True)
     contact_phone = fields.Char(compute = '_compute_contact_phone')

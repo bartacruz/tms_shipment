@@ -17,13 +17,21 @@ export class DriverList extends Component {
 
     setup() {
         this.orm = useService("orm");
+
         this.partners = useState({ data: [] });
-        this.pager = useState({ offset: 0, limit: 20 });
+        this.pager = useState({ offset: 0, limit: 50 });
         this.keepLast = new KeepLast();
         this.state = useState({
             searchString: "",
             displayActiveDrivers: false,
         })
+        this.busService = this.env.services.bus_service;
+        this.busService.addChannel("drivers");
+        this.busService.addEventListener('driver_changed', (a) => {
+            //this.loadDrivers.bind(this);
+            console.debug("driver_Changed",a);
+        });
+        this.busService.start();
 
         onWillStart(async () => {
             const { length, records } = await this.loadDrivers();
@@ -41,7 +49,10 @@ export class DriverList extends Component {
         this.onDrop = function(ev){
             console.debug("onDrop drivers",this,ev);
         }
-        // this.env.bus.addEventListener('updatesss',this.loadDrivers.bind(this));
+        // this.env.bus.addEventListener('driver_changed', (a) => {
+        //     console.debug("driver_Changed",a);
+        // });
+        console.debug("env:",this.env.services);
     }
 
     get displayedPartners() {
@@ -68,7 +79,7 @@ export class DriverList extends Component {
     loadDrivers() {
         console.debug("loading drivers");
         const { limit, offset } = this.pager;
-        const domain = this.state.displayActiveDrivers ? [["is_active", "!=", false]] : [];
+        const domain = this.state.displayActiveDrivers ? [["stage_id", "=", 5]] : [];
         return this.orm.webSearchRead("tms.driver", domain, {
             specification: {
                 "display_name": {},

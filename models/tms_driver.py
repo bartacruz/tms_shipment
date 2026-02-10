@@ -5,6 +5,10 @@ class TMSDriver(models.Model):
     _inherit = "tms.driver"
     _order = "stage_id,sequence, name, id"
     
+    # TODO: use a configuration setting for this.
+    STAGE_BASE = 5
+    STAGE_ASSIGNED = 6
+    
     def _default_driver_location_id(self):
         return self.env["tms.driver.location"].search([],
             order="sequence asc",
@@ -48,14 +52,17 @@ class TMSDriver(models.Model):
     def write(self, values):
         location_id = values.get('driver_location_id')
         if location_id:
-            print(location_id,self.driver_location_id, self._default_driver_location_id(),values.get('sequence'), self.sequence)
+            
             if location_id == self._default_driver_location_id().id :
                 values['sequence'] = 100
             else:
                 nloc = self.env["tms.driver.location"].browse(location_id)
                 values['sequence'] =nloc.driver_count +1
-            print("seq",values['sequence'])
+            
         result = super().write(values)
+        if 'stage_id' in values:
+            # self.env['bus.bus']._sendone('broadcast','driver_changed',{'id':self.id})
+            self.env['bus.bus']._sendone('drivers','driver_changed',{'id':self.id})
             
     def _read_group_driver_location_ids(self,locations,domain,order):
         return self.env['tms.driver.location'].search([],order=order)
@@ -68,12 +75,15 @@ class TMSDriver(models.Model):
     @api.depends('trips_ids')
     def _compute_active_tms_order(self):
         for record in self:
-            # active = [x for x in record.trips_ids if x.stage_id.is_active]
-            # active.append(None)
-            # print(active)
+            old_active = record._origin.active_tms_order_id
             record.active_tms_order_id = record.trips_ids.search([('driver_id','=',record.id),('is_active','=',True)],limit=1)
             if record.active_tms_order_id:
                 record.driver_location_id = 1
+                record.stage_id = self.STAGE_ASSIGNED
+            elif record.stage_id.id == self.STAGE_ASSIGNED or old_active:
+                # Was assigned but not anymore => return to base
+                record.stage_id = self.STAGE_BASE
+            
     
     def action_view_cpe(self):
         return self.partner_id.action_view_cpe()

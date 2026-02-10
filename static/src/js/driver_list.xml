@@ -5,13 +5,15 @@
             <thead>
                 <tr>
                     <td>
-                        <span>Drivers List</span>
-                        <div class="form-check">
+                        <strong class="o_kanban_record_title">
+                            <span>Drivers List</span>
+                        </strong>
+                        <!-- <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" t-on-change="onChangeActiveDrivers"/>
                             <label class="form-check-label" for="flexCheckDefault">
                                 Active drivers
                             </label>
-                        </div>
+                        </div> -->
                         <Pager offset="pager.offset" limit="pager.limit" total="pager.total" onUpdate.bind="onUpdatePager" />
                     </td>
                 </tr>
