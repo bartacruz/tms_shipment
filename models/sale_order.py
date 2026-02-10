@@ -18,6 +18,14 @@ class SaleOrder(models.Model):
         # readonly=False,
     )
     
+    @api.depends('partner_invoice_id')
+    def _compute_partner_shipping_id(self):
+        super()._compute_partner_shipping_id()
+        for order in self:
+            parent = order.partner_invoice_id or order.partner_id.parent_id or order.partner_id
+            shipping = parent.address_get(['delivery'])['delivery']
+            order.partner_shipping_id = shipping or order.partner_invoice_id
+    
     def _compute_tms_origin(self):
         for record in self:
             record.tms_origin_id = fields.first(record.tms_order_ids).origin_id
