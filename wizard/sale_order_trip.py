@@ -35,19 +35,20 @@ class SaleOrderTrip(models.TransientModel):
             self.order_confirmed = False
             
     def create_sale_order(self):
+        order_line = [
+            (0, 0, {'product_id': self.product_id.id, 
+                    "product_uom_qty": 1,
+                    "product_uom": self.product_id.uom_id.id,
+                    'tms_origin_id':self.origin.id, 
+                    'tms_destination_id':self.destination.id,
+                    'tms_factor': self.distance
+                    }
+                ) 
+        ]
         vals_list = [{
             "partner_id": self.partner_id.id,
             "state": "sale",
-            "order_line": [
-                (0, 0, {'product_id': self.product_id.id, 
-                        "product_uom_qty": self.qty,
-                        "product_uom": self.product_id.uom_id.id,
-                        'tms_origin_id':self.origin.id, 
-                        'tms_destination_id':self.destination.id,
-                        'tms_factor': self.distance
-                        }
-                 ) 
-            ],
+            "order_line": order_line*self.qty,
         } ]
         print("vals",vals_list)
         self.env["sale.order"].create(vals_list)
