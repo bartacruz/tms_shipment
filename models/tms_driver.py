@@ -74,4 +74,13 @@ class TMSDriver(models.Model):
             record.active_tms_order_id = record.trips_ids.search([('driver_id','=',record.id),('is_active','=',True)],limit=1)
             if record.active_tms_order_id:
                 record.driver_location_id = 1
-            
+    
+    def action_view_cpe(self):
+        return self.partner_id.action_view_cpe()
+    
+    def action_view_sale_order(self):
+        return self.partner_id.action_view_sale_order()
+
+    def action_view_partner_invoices(self):
+        return self.partner_id.action_view_partner_invoices()
+    
