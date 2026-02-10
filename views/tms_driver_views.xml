@@ -41,7 +41,7 @@
                 <field name="driver_location_id" />
             </xpath>
             <xpath expr="//kanban" position="attributes">
-                <attribute name="default_group_by">stage_id</attribute>
+                <attribute name="default_group_by"/>
                 <attribute name="group_create">False</attribute>
                 <attribute name="group_edit">True</attribute>
                 <attribute name="create">False</attribute>
@@ -51,7 +51,7 @@
                 <field name="active_tms_order_id" />
                 <field name="vehicle_id" />
                 <field name="trailer_id" />
-                
+
             </xpath>
             <xpath
                 expr="//div[@t-attf-class='oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card']"
@@ -73,6 +73,44 @@
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_image')]" position="replace" />
+        </field>
+    </record>
+
+    <record id="tms.action_tms_driver" model="ir.actions.act_window">
+        <field name="name">Drivers</field>
+        <field name="res_model">tms.driver</field>
+        <field name="domain">[('is_company', '=', False)]</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_group_by_stage': 1}</field>
+
+        <field
+            name="view_ids"
+            eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('tms.view_tms_driver_kanban')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('tms.view_tms_driver_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('tms.view_tms_driver_form_inherit')}),
+            ]"
+        />
+    </record>
+
+    <record id="tms_driver_view_search" model="ir.ui.view">
+        <field name="name">tms-driver.view.search</field>
+        <field name="model">tms.driver</field> 
+        <field name="arch" type="xml">
+            <search string="">
+                <field name="name" string="Name" />
+                <field name="vat" string="CUIT" />
+                <field name="email" string="Email"/>
+                <filter
+                    name="available"
+                    string="Disponibles"
+                    domain="[('stage_id','=',5)]"
+                />
+                <group expand="0" string="Group By">
+                    <filter name="group_by_stage" context="{'group_by': 'stage_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
     <menuitem
