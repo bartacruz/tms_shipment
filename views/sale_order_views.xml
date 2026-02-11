@@ -13,6 +13,7 @@
                 js_class="tms_kanban"
             >
                 <field name="partner_id" />
+                <field name="partner_invoice_id" />
                 <field name="tms_origin_id" />
                 <field name="tms_destination_id" />
                 <field name="tms_order_ids" />
@@ -33,17 +34,27 @@
                                     class="o_image_64_contain" />
                             </div> -->
                             <div class="oe_kanban_details">
+                                <div class="text-muted o_row d-flex justify-content-end">
+                                    
+                                    <field name="create_date" widget="datetime" options="{'show_time': false}" />
+                                </div>
                                 <div class="o_kanban_record_top mb-0">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
-                                            <field name="partner_id" context = "{'show_alias':True}"/>
+                                            <field name="partner_id" context="{'show_alias':True}"/>
                                         </strong>
+                                        <t t-if="record.partner_invoice_id.raw_value != record.partner_id.raw_value">
+                                            <div>
+                                                <span>Para:</span>
+                                                <strong class="o_kanban_record_title">
+                                                    <field name="partner_invoice_id" context = "{'show_alias':True}"/>
+                                                </strong>
+                                            </div>
+                                        </t>
                                     </div>
                                     <field name="tag_ids" widget="many2many_tags"/>
                                 </div>                                
-                                <div class="text-muted o_row">
-                                    <field name="create_date" />
-                                </div>
+                                
                                 <div class="text-muted o_row">
                                     <t t-esc="record.tms_origin_id.value" />
                                     <i
@@ -55,7 +66,7 @@
                                         t-esc="record.tms_destination_id.value"
                                     />
                                 </div>
-                                <div class="o_tms_orders o_row w-100">
+                                <div class="o_tms_orders o_row w-100 mt-1">
                                     <field name="tms_order_ids" widget="trips"
                                         options="{'color_field': 'color'}" 
                                         class="w-100"/>
