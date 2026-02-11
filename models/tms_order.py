@@ -37,11 +37,24 @@ class TMSOrder(models.Model):
     
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
+    warnings = fields.Char(compute="_compute_warnings")
+    
+    
     @api.model
     def _sale_id_expand_groups(self, records, domain, order):
         print("_expand_", records,domain,order)
         return records[::-1]
     
+    @api.depends('driver_id')
+    def _compute_warnings(self):
+        for record in self:
+            record.warnings = ''
+            if record.is_active  and record.driver_id and not record.driver_id.vehicle_id:
+                record.warnings += "El conductor no tiene vehículo asignado\n"
+            if record.is_active and record.driver_id and record.driver_id.active_tms_order_id != record:
+                print("warn",record,record.driver_id.active_tms_order_id,record)
+                record.warnings += "El conductor está asignado en otra orden (%s)\n" % record.driver_id.active_tms_order_id
+                
     @api.depends('customer_id')
     def _compute_contact_phone(self):
         for record in self:

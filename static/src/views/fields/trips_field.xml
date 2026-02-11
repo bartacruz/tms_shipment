@@ -10,16 +10,38 @@
             t-on-dragenter.prevent="onDragEnter"
             t-on-dragleave.prevent="onDragLeave"
             t-on-drop.prevent="onDrop">
+            
         <t t-foreach="trips" t-as="trip" t-key="trip.id">
-            <div t-att-class="trip.class" t-att-data-id="trip.resId" t-on-click="onClick">
-                <t t-if="trip.driver">
-                    <span class="m-2" t-out="trip.driver"/>
-                    <!-- <span class="m-2" t-out="trip.vehicle" t-if="trip.vehicle"/>
-                    <span class="m-2" t-out="trip.trailer" t-if="trip.trailer"/> -->
-                </t>
-                <t t-else="">
-                    <div t-out="trip.text"/>    
-                </t>                
+            <div t-attf-class="o_trip mt-1 p-1 rounded border o_row {{trip.driver ? 'text-bg-secondary':'border'}}" t-att-data-id="trip.resId" t-on-click="onClick">
+                <div class="mb-1 d-flex justify-content-between" >
+                    <div>
+                        <span t-out="trip.driver" t-if="trip.driver"/>
+                        <span t-out="trip.text" t-if="trip.driver == false"/>
+                    </div>
+                    <div>
+                        <i t-if="trip.warnings" t-att-title="trip.warnings" class="fa fa-warning text-warning" />
+                        <i t-if="trip.running" title="En curso" class="fa fa-truck text-primary"/>
+                    </div>
+                </div>   
+                <div class="d-flex justify-content-between">
+                    <div class="text-muted">
+                        <span t-if="trip.driver == false">(Asignar)</span>
+                        <span t-out="trip.vehicle" t-if="trip.vehicle"/>
+                        <span class="ms-1" t-out="trip.trailer" t-if="trip.trailer"/>
+                    </div>
+                    <div>
+                        <span 
+                            t-attf-class = "
+                            badge rounded-pill
+                            {{trip.is_cancelled? 'text-bg-danger':''}}
+                            {{trip.is_completed? 'text-bg-success':''}}
+                            {{trip.is_active? 'text-bg-primary':''}}
+                            "
+                            t-out="trip.stage" 
+                            t-if="trip.stage"
+                        />
+                    </div>
+                </div>                
             </div>
         </t>
         </div>

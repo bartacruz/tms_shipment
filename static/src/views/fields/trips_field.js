@@ -61,19 +61,9 @@ export class TripsField extends Component {
         var driver = record.data.driver_id ? record.data.driver_id[1] : false;
         var vehicle = record.data.vehicle_id ? record.data.vehicle_id[1] : false;
         var trailer = record.data.trailer_id ? record.data.trailer_id[1] : false;
-        let class_str = "o_trip m-1 p-2 rounded o_row";
-        
-        if (!driver) {
-            class_str = class_str + " text-bg-secondary";
-        } else if (!vehicle) {
-            class_str = class_str + " text-bg-warning";
-        } else if (record.data.is_active) {
-            class_str = class_str + " text-bg-primary";
-        } else if (record.data.is_completed) {
-            class_str = class_str + " text-bg-success";
-        } else if (record.data.is_cancelled) {
-            class_str = class_str + " text-bg-success";
-        }
+        var stage_id = record.data.stage_id ? record.data.stage_id[0] : 0;
+        var stage = record.data.stage_id ? record.data.stage_id[1] : false;
+        var running = record.data.is_active && record.data.date_start ;
         return {
             id: record.id, // datapoint_X
             resId: record.resId,
@@ -85,10 +75,11 @@ export class TripsField extends Component {
             is_active: record.data.is_active,
             is_completed: record.data.is_completed,
             is_cancelled: record.data.is_cancelled,
-            class: class_str,
-            save:(ev) => {
-                console.debug("SAVE PEDORRO",this,ev);
-            },
+            stage_id: stage_id,
+            stage: stage,
+            running: running,
+            warnings: record.data.warnings,
+            
         };
         
     }
@@ -141,7 +132,19 @@ export const tripsField = {
     displayName:"Trips",
     supportedTypes: ["many2many"],
     relatedFields: (fieldInfo) => {
-        return [ {name:'id', type:"int"},{ name: "display_name", type: "char" },{ name: "driver_id", type: "many2one" }, { name: "vehicle_id", type: "many2one" }, { name: "trailer_id", type: "many2one" },{name:"is_active", type:"bool"}, {name:"is_completed", type:"bool"}, {name:"is_cancelled", type:"bool"}];
+        return [ 
+            { name:'id', type:"int"},
+            { name: "display_name", type: "char" },
+            { name: "driver_id", type: "many2one" }, 
+            { name: "vehicle_id", type: "many2one" }, 
+            { name: "trailer_id", type: "many2one" },
+            { name:"is_active", type:"bool"}, 
+            { name:"is_completed", type:"bool"}, 
+            { name:"is_cancelled", type:"bool"},
+            { name: "stage_id", type: "many2one" }, 
+            { name: "warnings", type: "char" }, 
+            { name: "date_start", type: "date" }, 
+        ];
     },
     
 }
