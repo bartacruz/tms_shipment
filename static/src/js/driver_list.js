@@ -19,12 +19,14 @@ export class DriverList extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.partners = useState({ data: [] });
-        this.pager = useState({ offset: 0, limit: 50 });
+        this.root = useRef('root');
+        this.pager = useState({ offset: 0, limit: 15 });
         this.keepLast = new KeepLast();
         this.state = useState({
             searchString: "",
             displayActiveDrivers: false,
             lastSearch: "",
+            folded:false,
         })
         this.busService = this.env.services.bus_service;
         this.busService.addChannel("drivers");
@@ -51,11 +53,13 @@ export class DriverList extends Component {
         // this.env.bus.addEventListener('driver_changed', (a) => {
         //     console.debug("driver_Changed",a);
         // });
-        console.debug("env:",this.env.services);
+        console.debug("env:",this.env.services,this.root);
     }
     async selectDriver(ev) {
-        const driver_id = $(ev.srcElement).closest('td').dataset.driverId;
-        console.debug("selectDriver",driver_id,this,ev);
+        console.debug("selectDriver",this,ev);
+        const td = $(ev.srcElement).closest('.driver');
+        const driver_id = td.data("driverId");
+        console.debug("driverId",driver_id);
         
         this.action.doAction({
             type: 'ir.actions.act_window',
@@ -90,7 +94,7 @@ export class DriverList extends Component {
         // this.partners.data = records;
         // this.pager.total = length;
     }
-
+    
     filterDrivers(name) {
         console.debug("filterDrivers",name);
         if (name) {

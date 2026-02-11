@@ -1,36 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="tms_shipment.DriverList">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <td>
-                        <strong class="o_kanban_record_title">
-                            <span>Drivers List</span>
-                        </strong>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" t-on-change="onChangeActiveDrivers"/>
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Active drivers
-                            </label>
-                        </div>
-                        <Pager offset="pager.offset" limit="pager.limit" total="pager.total" onUpdate.bind="onUpdatePager" />
-                    </td>
-                </tr>
-            </thead>
-            <tbody t-ref="drivers">
-                <tr>
-                    <td>
-                        <input class="o_input w-100" placeholder="Filter drivers" t-model="state.searchString"/>
-                    </td>
-                </tr>
-                <tr t-foreach="displayedPartners" t-as="partner" t-key="partner.id"  class="o_tms_driver_hover driver">
-                    <td class="cursor-pointer" t-att-data-driver-id="partner.id" t-on-click="selectDriver" draggable="true" t-on-dragstart="onDrag" t-on-drop="onDrop">
-                        <span t-esc="partner.display_name" t-att-title="partner.stage_id.name" t-attf-class="{{partner.stage_id.id == 5 ? '':'fst-italic fw-light'}}"/>
-                        
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="tms_shipment_driverlist overflow-hidden" id="tmsShipmentDriverlist" t-ref="root">
+                                
+            <!-- <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" t-on-change="onChangeActiveDrivers"/>
+                <label class="form-check-label" for="flexCheckDefault">
+                    Active drivers
+                </label>
+            </div> -->
+            <div t-ref="drivers">
+                <div class="p-1 my-2">
+                    <input class="o_input w-100" placeholder="Filter drivers" t-model="state.searchString"/>
+                </div>
+                <div t-foreach="displayedPartners" t-as="partner" t-key="partner.id"  class="o_tms_driver_hover driver p-2 ps-3 border-bottom" t-att-data-driver-id="partner.id" t-on-click="selectDriver" draggable="true" t-on-dragstart="onDrag" t-on-drop="onDrop">
+                        <span t-esc="partner.display_name" t-att-title="partner.stage_id.name" t-attf-class="{{partner.stage_id.id == 5 ? '':'fst-italic fw-light'}}"/>                    
+                </div>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+                <Pager offset="pager.offset" limit="pager.limit" total="pager.total" onUpdate.bind="onUpdatePager" />
+            </div>
+        </div>
+    
     </t>
 </templates>

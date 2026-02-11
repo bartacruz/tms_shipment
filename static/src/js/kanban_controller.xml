@@ -1,9 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="tms_shipment.TMSKanbanController" t-inherit="web.KanbanView">
         <xpath expr="//t[@t-component='props.Renderer']" position="before">
-            <div class="bg-white border-end o_tms_kanban_sidebar overflow-auto h-100">
-                <DriverList selectDriver.bind="selectDriver"/>
+            <div class="bg-white border-end border-top o_tms_kanban_sidebar h-100">
+                <div class="p-2 o_tms_kanban_heading" t-on-click="toggleFold">
+                    <i class="fa fa-arrow-circle-right"/>
+                    <div class="o_tms_kanban_title fs-3 p-1">
+                        <strong>Drivers List</strong>
+                    </div>
+                    <i class="fa fa-arrow-circle-left"/>
+                    
+                </div>
+                <div class="o_tms_kanban_sidebar_content">
+                    <DriverList selectDriver.bind="selectDriver" />
+                </div>
             </div>
         </xpath>
     </t>

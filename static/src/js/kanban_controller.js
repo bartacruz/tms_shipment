@@ -11,7 +11,10 @@ export class TMSKanbanController extends KanbanController {
         super.setup();
         this.searchKey = Symbol("isFromTmsKanban");
     }
-
+    toggleFold() {
+        
+        $(this.rootRef.el).find(".o_tms_kanban_sidebar").toggleClass("folded");
+    }
     selectDriver(partner_id, partner_name) {
         const driverFilters = this.env.searchModel.getSearchItems((searchItem) =>
             searchItem[this.searchKey]
