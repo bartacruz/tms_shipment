@@ -13,16 +13,18 @@ class SaleOrderTrip(models.TransientModel):
         "res.partner",
         domain="[('tms_location', '=', 'True'), ('parent_id','=',partner_id)]",
         context={"default_tms_location": True, 'default_parent_id':partner_id},
-    )
+        default = lambda self: self.order_id.tms_origin_id.id    )
     destination = fields.Many2one(
         "res.partner",
         domain="[('tms_location', '=', 'True')]",
         context={"default_tms_location": True},
+        default = lambda self: self.order_id.tms_destination_id.id
     )
     qty = fields.Integer("Trucks",default=1)
     distance = fields.Integer("Distance",default=1)
     start = fields.Datetime(string="Scheduled start")
     end = fields.Datetime(string="Scheduled end")
+    sale_label = fields.Char(compute="_compute_label")
 
     order_confirmed = fields.Boolean(readonly=True)
 

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
+import { useBus,useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, useState,useRef } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -28,14 +28,7 @@ export class DriverList extends Component {
             lastSearch: "",
             folded:false,
         })
-        this.busService = this.env.services.bus_service;
-        this.busService.addChannel("drivers");
-        this.busService.addEventListener('driver_changed', (a) => {
-            //this.loadDrivers.bind(this);
-            console.debug("driver_Changed",a);
-        });
-        this.busService.start();
-
+        useBus(this.env.bus, "driver_changed", this.updateDrivers);
         onWillStart(async () => {
             await this.updateDrivers();
         })
@@ -45,21 +38,14 @@ export class DriverList extends Component {
             ev.dataTransfer.setData("text",driver_id);
             ev.dataTransfer.dropEffect = "move";
             ev.dataTransfer.effectAllowed = "move";
-            console.debug("driver",driver_id);
         }
         this.onDrop = function(ev){
             console.debug("onDrop drivers",this,ev);
         }
-        // this.env.bus.addEventListener('driver_changed', (a) => {
-        //     console.debug("driver_Changed",a);
-        // });
-        console.debug("env:",this.env.services,this.root);
     }
     async selectDriver(ev) {
-        console.debug("selectDriver",this,ev);
         const td = $(ev.srcElement).closest('.driver');
         const driver_id = td.data("driverId");
-        console.debug("driverId",driver_id);
         
         this.action.doAction({
             type: 'ir.actions.act_window',
@@ -71,8 +57,6 @@ export class DriverList extends Component {
         });
     }
     get displayedPartners() {
-        // return this.filterDrivers(this.state.searchString);
-        console.debug("getdisplayedPartners",this.state.searchString,this.state.lastSearch);
         if (this.state.searchString != this.state.lastSearch) {
             this.updateDrivers();
         }
@@ -88,11 +72,6 @@ export class DriverList extends Component {
     async onChangeActiveDrivers(ev) {
         this.state.displayActiveDrivers = ev.target.checked;
         this.updateDrivers();
-        // this.partners.data = await this.keepLast.add(this.loadDrivers());
-        // this.pager.offset = 0;
-        // const { length, records } = await this.keepLast.add(this.loadDrivers());
-        // this.partners.data = records;
-        // this.pager.total = length;
     }
     
     filterDrivers(name) {
@@ -111,7 +90,7 @@ export class DriverList extends Component {
             domain.push(['name','ilike',this.state.searchString]);
         }
         this.state.lastSearch = this.state.searchString;
-        console.debug("loading drivers", domain);
+        // console.debug("loading drivers", domain);
         
         return this.orm.webSearchRead("tms.driver", domain, {
             specification: {
@@ -128,6 +107,5 @@ export class DriverList extends Component {
         Object.assign(this.pager, newState);
         const { records } = await this.loadDrivers();
         this.partners.data = records;
-        // this.filterDrivers(this.filterName);
     }
 }

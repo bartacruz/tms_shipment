@@ -62,7 +62,7 @@ class TMSDriver(models.Model):
         result = super().write(values)
         if 'stage_id' in values:
             # self.env['bus.bus']._sendone('broadcast','driver_changed',{'id':self.id})
-            self.env['bus.bus']._sendone('drivers','driver_changed',{'id':self.id})
+            self.env['bus.bus']._sendone('tms','driver_changed',{'id':self.id})
             
     def _read_group_driver_location_ids(self,locations,domain,order):
         return self.env['tms.driver.location'].search([],order=order)

@@ -18,6 +18,7 @@
                 <field name="tms_destination_id" />
                 <field name="tms_order_ids" />
                 <field name="tag_ids" />
+                <field name="tms_active" />
                 <header>
                     <button name="action_create_tms_order" type="object"
                         class="o_button_create_tms_sale btn-primary" string="New"
@@ -60,8 +61,9 @@
                                                 <field name="partner_invoice_id" context="{'show_alias':True}" />
                                             </div>
                                         </t>
+                                        <field name="tag_ids" widget="many2many_tags" />
                                     </div>
-                                    <field name="tag_ids" widget="many2many_tags" />
+                                    
                                 </div>
 
                                 <div class="o_kanban_record_body">
@@ -86,9 +88,15 @@
         <field name="arch" type="xml">
             <search>
                 <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_tms_sale_orders_filter"/>
-                <filter string="Hoy" name="filter_today_creation"
-                    domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]" />
-                <filter string="Active" name="tms_sale" domain="[('state', '=', 'sale'),]" />
+                <group name="sale_dates" string="Fecha">
+                    <filter string="Hoy" name="filter_today_creation"
+                        domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]" />
+                    <filter string="7 días" name="filter_week_creation"
+                        domain="[('create_date','&gt;', (context_today() - datetime.timedelta(weeks=1)).strftime('%Y-%m-%d'))]" />
+                    <filter string="30 días" name="filter_mont_creation"
+                        domain="[('create_date','&gt;', (context_today() - datetime.timedelta(months=1)).strftime('%Y-%m-%d'))]" />
+                </group>
+                <filter string="Active" name="tms_actives" domain="[('tms_active', '=', True),]" />
             </search>
         </field>
     </record>
@@ -100,7 +108,8 @@
         <field name="context">
             {
             "search_default_has_tms_order": True,
-            "search_default_tms_sale":True,
+            "search_default_tms_actives":True,
+            "search_default_filter_week_creation":True,
             "default_has_tms_order": True
             }
         </field>
@@ -120,8 +129,13 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_details']" position="inside">
+                <field name="tms_origin_id"/>
+                <field name="tms_destination_id" />
+            </xpath>
             <xpath expr="//page[@name='order_lines']" position="before">
                 <page string="Viajes" name="tms_orders">
+                    <button type="object" name="action_new_trip_sale" class="btn btn-primary btn-sm" string="New Trip"/>
                     <field name="tms_order_ids" mode="tree" />
                 </page>
             </xpath>

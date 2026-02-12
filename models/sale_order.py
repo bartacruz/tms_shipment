@@ -17,6 +17,13 @@ class SaleOrder(models.Model):
         # store=True,
         # readonly=False,
     )
+    tms_active = fields.Boolean(compute="_compute_tms_active", store=True)
+    
+    @api.depends('tms_order_ids')
+    def _compute_tms_active(self):
+        for record in self:
+            stages = [stage.is_completed or stage.is_cancelled for stage in record.tms_order_ids]
+            record.tms_active = not all(stages)
     
     @api.depends('partner_invoice_id')
     def _compute_partner_shipping_id(self):
@@ -44,3 +51,18 @@ class SaleOrder(models.Model):
             "views": [[vid, "form"]],
             "context": {"is_modal": True},
         }
+        
+    def action_new_trip_sale(self):
+        return {
+            "name": _("Transport Order"),
+            "type": "ir.actions.act_window",
+            "res_model": "sale.order.trip",
+            "target": "new",
+            "context": {"is_modal": True},
+        }
+        
+    def action_view_trip_sale_order_line(self):
+        action = super().action_view_trip_sale_order_line()
+        action['context']={"default_origin":self.tms_origin_id}
+        print("ACTION",action)
+        return action

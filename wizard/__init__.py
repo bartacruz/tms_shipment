@@ -1,1 +1,1 @@
-from . import  sale_order_trip
+from . import  sale_order_trip, sale_order_line_trip

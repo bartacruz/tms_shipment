@@ -132,7 +132,12 @@ class TMSOrder(models.Model):
                         vals["date_end"] = order.date_end or datetime.now()
                     else:
                         print("already ended")
-        return super().write(vals)
+                order.sale_id._compute_tms_active()
+        ret = super().write(vals)
+        if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids',]):
+            print("sending order_changed",self.id,self.sale_id)
+            self.env['bus.bus']._sendone('tms','order_changed',{'id':self.id,'order_id':self.sale_id.id})
+    
     
     def action_create_tms_order(self):
         vid = self.env.ref('tms_shipment.sale_order_trip_view_form').id

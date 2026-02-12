@@ -3,9 +3,9 @@
 import { Component, useRef } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { useService } from "@web/core/utils/hooks";
-import {useX2ManyCrud} from "@web/views/fields/relational_utils";
-import {useDebounced} from "@web/core/utils/timing";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { useDebounced } from "@web/core/utils/timing";
 
 
 export class TripsField extends Component {
@@ -16,46 +16,32 @@ export class TripsField extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(
             () => this.props.record.data[this.props.name],
             false
         );
-        this.refresh = useDebounced(this.refresh,1500);
-
-        this.assignTrip = async (trip,driver) => {
-            this.env.services.ui.block();
-            const assigned = await this.orm.call('tms.order', "assign_driver", [trip,driver], {
-                context: this.props.context,
-            });
-            console.debug("assigned",assigned, typeof(assigned));
-            
-            
-            // const tripRecord = this.props.record.data[this.props.name].records.find(
-            //     (record) => record.resId === assigned
-            // );
-            // tripRecord.dirty=true;
-            // console.debug("assigned",assigned,tripRecord,tripRecord.isNew,tripRecord.dirty);
-            // this.props.record.data[this.props.name].validateExtendedRecord(tripRecord);
-            await this.refresh();
-            
-            this.env.services.ui.unblock();
-            return assigned;
-            // const trip2 = this.getTrip(tripRecord);
-            // console.debug("assigned",assigned,tripRecord,trip2);
-            
-            
-            // this.props.record.data[this.props.name].load();
-        };
+        // this.refresh = useDebounced(this.refresh,1500);
+        useBus(this.env.bus, "order_changed", this.updateTrips);
         const searchModel = this.env.searchModel;
-        
+
+    }
+    async assignTrip(trip, driver) {
+        this.env.services.ui.block();
+        const assigned = await this.orm.call('tms.order', "assign_driver", [trip, driver], {
+            context: this.props.context,
+        });
+        console.debug("assigned", assigned);
+        this.env.services.ui.unblock();
+    };
+
+    updateTrips(ev) {
+        const detail = ev.detail;
+        if (detail.order_id == this.props.record.resId) {
+            this.refresh();
+        }
     }
     async refresh() {
-        await this.action.loadState();
-        const controller = this.action.currentController
-        const action = controller.action
-        console.debug("action:",controller,action);
-        this.action.doAction(action)
+        await this.props.record.load();
     }
     getTrip(record) {
         var driver = record.data.driver_id ? record.data.driver_id[1] : false;
@@ -63,7 +49,7 @@ export class TripsField extends Component {
         var trailer = record.data.trailer_id ? record.data.trailer_id[1] : false;
         var stage_id = record.data.stage_id ? record.data.stage_id[0] : 0;
         var stage = record.data.stage_id ? record.data.stage_id[1] : false;
-        var running = record.data.is_active && record.data.date_start ;
+        var running = record.data.is_active && record.data.date_start;
         return {
             id: record.id, // datapoint_X
             resId: record.resId,
@@ -79,15 +65,14 @@ export class TripsField extends Component {
             stage: stage,
             running: running,
             warnings: record.data.warnings,
-            
+
         };
-        
+
     }
     async onClick(ev) {
         ev.stopPropagation();
         var target = $(ev.target).closest('.o_trip');
         const trip = target.data("id");
-        console.debug("onclick",trip);
         this.action.doAction({
             type: 'ir.actions.act_window',
             name: 'Viaje',
@@ -106,21 +91,14 @@ export class TripsField extends Component {
         var target = $(ev.target);
         target.closest('.o_trip').removeClass('o_sarasa');
     }
-    onDrop(ev,a,b) {
-        console.debug("onDrop Trip out", ev);
+    onDrop(ev, a, b) {
         var target = $(ev.target).closest('.o_trip');
         target.removeClass('o_sarasa');
-        
+
         const driver_id = ev.dataTransfer.getData("text");
         const trip = target.data("id");
-        console.debug("driver_id",driver_id,"trip",trip);
-        this.assignTrip(trip,driver_id);
-
-        // if (this.props.readonly) {
-        //     return;
-        // }
-        // this.onTagKeydown(ev);
-}
+        this.assignTrip(trip, driver_id);
+    }
     get trips() {
         return this.props.record.data[this.props.name].records.map((record) =>
             this.getTrip(record)
@@ -129,23 +107,23 @@ export class TripsField extends Component {
 }
 export const tripsField = {
     component: TripsField,
-    displayName:"Trips",
+    displayName: "Trips",
     supportedTypes: ["many2many"],
     relatedFields: (fieldInfo) => {
-        return [ 
-            { name:'id', type:"int"},
+        return [
+            { name: 'id', type: "int" },
             { name: "display_name", type: "char" },
-            { name: "driver_id", type: "many2one" }, 
-            { name: "vehicle_id", type: "many2one" }, 
+            { name: "driver_id", type: "many2one" },
+            { name: "vehicle_id", type: "many2one" },
             { name: "trailer_id", type: "many2one" },
-            { name:"is_active", type:"bool"}, 
-            { name:"is_completed", type:"bool"}, 
-            { name:"is_cancelled", type:"bool"},
-            { name: "stage_id", type: "many2one" }, 
-            { name: "warnings", type: "char" }, 
-            { name: "date_start", type: "date" }, 
+            { name: "is_active", type: "bool" },
+            { name: "is_completed", type: "bool" },
+            { name: "is_cancelled", type: "bool" },
+            { name: "stage_id", type: "many2one" },
+            { name: "warnings", type: "char" },
+            { name: "date_start", type: "date" },
         ];
     },
-    
+
 }
 registry.category("fields").add("trips", tripsField);
