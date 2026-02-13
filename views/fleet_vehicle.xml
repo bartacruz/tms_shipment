@@ -26,7 +26,7 @@
             </xpath>
             <xpath expr="//t[@t-if='record.driver_id.raw_value']" position="replace">
                 <t t-if="record.tms_driver_id.raw_value">
-                    <i class="fa fa-user mx-2" title="Conductor" />
+                    <i class="fa fa-user mx-2" title="Driver" />
                     <field name="tms_driver_id" />
                 </t>
             </xpath>

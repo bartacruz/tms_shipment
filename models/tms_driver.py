@@ -14,7 +14,7 @@ class TMSDriver(models.Model):
             order="sequence asc",
             limit=1,
         )
-        
+    driver_type=fields.Selection(default='terrestrial')
     driver_location_id = fields.Many2one(
         "tms.driver.location",
         string="Driver Location",
@@ -27,9 +27,16 @@ class TMSDriver(models.Model):
     vehicle_ids = fields.One2many("fleet.vehicle", "tms_driver_id")
     vehicle_id = fields.Many2one('fleet.vehicle',compute='_compute_tms_vehicle', inverse='_inverse_tms_vehicle', domain="[('operation','=','cargo')]")
     trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True, store=True)
+    
+    trips_ids_count = fields.Integer(compute='_compute_trips_ids')
     active_tms_order_id = fields.Many2one("tms.order", compute="_compute_active_tms_order", store=True)
     sequence = fields.Integer(default=100)
     
+    @api.depends('trips_ids')
+    def _compute_trips_ids(self):
+        for record in self:
+            record.trips_ids_count = len(record.trips_ids)
+        
     @api.depends('vehicle_ids')
     def _compute_tms_vehicle(self):
         for record in self:
@@ -84,6 +91,20 @@ class TMSDriver(models.Model):
                 # Was assigned but not anymore => return to base
                 record.stage_id = self.STAGE_BASE
             
+    def action_view_tms_orders(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "tms.order",
+            "view_mode": "tree,form",
+            "domain": [("driver_id", "=", self.id)],
+            "name": "TMS Orders %s" % self.name,
+        }        
+    
+    ### super methods for view compatiblility ###
+    
+    def action_view_partner_with_same_bank(self):
+        return self.partner_id.action_view_partner_with_same_bank()
     
     def action_view_cpe(self):
         return self.partner_id.action_view_cpe()
@@ -93,4 +114,5 @@ class TMSDriver(models.Model):
 
     def action_view_partner_invoices(self):
         return self.partner_id.action_view_partner_invoices()
-    
+    def l10n_ar_afipws_fe_min_ammount(self):
+        return self.partner_id.l10n_ar_afipws_fe_min_ammount()

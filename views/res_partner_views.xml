@@ -25,7 +25,7 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_id']" position="after">
-                <field name="tms_driver_id" />
+                <field name="tms_driver_id" invisible="active_model == 'tms.driver'"/>
             </xpath>
             <xpath expr="//field[@name='parent_id']" position="after">
                 <field name="alias_name" placeholder="Alias..." invisible="not is_company" />
@@ -39,7 +39,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(purchase_stock.action_purchase_vendor_delay_report)d']" position="replace">
                 <button class="oe_stat_button" name="action_view_cpe" type="object"
-                        icon="fa-truck"
+                        icon="fa-file-text-o"
                         context="{'search_default_partner_id': id}"
                         invisible="cpe_ids_count &lt;=0">
                         <field string="CPEs" name="cpe_ids_count" widget="statinfo"/>        

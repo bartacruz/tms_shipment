@@ -18,19 +18,37 @@
         </field>
     </record>
 
-    <!-- <record id="tms_driver_form_inherit_tms_shipment" model="ir.ui.view">
+    <record id="tms_driver_form_inherit" model="ir.ui.view">
         <field name="name">tms.driver.form.tms_shipment</field>
         <field name="model">tms.driver</field>
-        <field name="priority" eval="1000"/>
         <field name="inherit_id" ref="tms.view_tms_driver_form_inherit"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_external']" position="before">
+            <xpath expr="//button[@name='action_view_sale_order']" position="after">
+                <button class="oe_stat_button" type="object" name="action_view_tms_orders"
+                    icon="fa-truck">
+                    <field string="Trips" name="trips_ids_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            
+            <xpath expr="//button[@name='%(purchase.act_res_partner_2_purchase_order)d']" position="attributes">
+                <attribute name="invisible">purchase_order_count==0</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sale_order']" position="attributes">
+                <attribute name="invisible">sale_order_count==0</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_partner_invoices']" position="attributes">
+                <attribute name="invisible">total_invoiced==0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='website']" position="replace"/>
+            <xpath expr="//field[@name='title']" position="replace"/>
+            <xpath expr="//field[@name='category_id']" position="after">
                 <field name="vehicle_id" />
                 <field name="trailer_id" readonly="True"/>
             </xpath>
+            <xpath expr="//field[@name='is_training']" position="replace"/>
         </field>
     </record>
-         -->
+        
 
     <record id="view_tms_driver_kanban_tms_shipment" model="ir.ui.view">
         <field name="name">tms.driver.view.kanban.inherit</field>
@@ -60,7 +78,7 @@
             </xpath>
             <xpath expr="//span[@t-if='record.mobile.value']" position="after">
                 <span class="o_text_overflow text-muted" t-if="record.vehicle_id.raw_value">
-                    <span class="fa fa-truck me-2" aria-label="Camión" title="Camión" />
+                    <span class="fa fa-truck me-2" aria-label="Truck" title="Truck" />
                     <t t-esc="record.vehicle_id.value" />
                     <span t-if="record.trailer_id.raw_value" class="ms-2">
                         <t t-esc="record.trailer_id.value" />

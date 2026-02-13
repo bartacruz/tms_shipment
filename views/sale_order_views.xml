@@ -57,7 +57,7 @@
                                         <t
                                             t-if="record.partner_invoice_id.raw_value != record.partner_id.raw_value">
                                             <div>
-                                                <span>Para:</span>
+                                                <span>For:</span>
                                                 <field name="partner_invoice_id" context="{'show_alias':True}" />
                                             </div>
                                         </t>

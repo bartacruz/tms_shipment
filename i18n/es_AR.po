@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-05 17:56+0000\n"
-"PO-Revision-Date: 2025-11-05 17:56+0000\n"
+"POT-Creation-Date: 2026-02-13 19:13+0000\n"
+"PO-Revision-Date: 2026-02-13 19:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #. module: tms_shipment
 #. odoo-javascript
-#: code:addons/tms_shipment/static/src/views/fields/many2many_trip_field.xml:0
+#: code:addons/tms_shipment/static/src/views/fields/trips_field.xml:0
 #, python-format
 msgid "(Asignar)"
 msgstr ""
@@ -30,41 +30,118 @@ msgid "(No registrado)"
 msgstr ""
 
 #. module: tms_shipment
-#: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_tms_view_kanban
-msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow "
-"icon\" title=\"Arrow\"/>"
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
+msgid "30 días"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
+msgid "7 días"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_kanban_tms_shipment
+msgid "<i class=\"fa fa-paperclip mx-2\" title=\"Trailer\"/>"
+msgstr "Acoplado"
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_kanban_tms_shipment
+msgid "<i class=\"fa fa-truck mx-2\" title=\"Truck\"/>"
+msgstr "<i class=\"fa fa-truck mx-2\" title=\"Camión\"/>"
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_kanban_tms_shipment
+msgid "<i class=\"fa fa-user mx-2\" title=\"Conductor\"/>"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_tms_driver_kanban_tms_shipment
+msgid "<span class=\"fa fa-truck me-2\" aria-label=\"Truck\" title=\"Truck\"/>"
+msgstr "<span class=\"fa fa-truck me-2\" aria-label=\"Camión\" title=\"Camión\"/>"
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.cpe_view_form_inherit
+msgid "<span class=\"o_stat_text\">Orden de Transporte</span>"
 msgstr ""
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_tms_view_kanban
-msgid "<span class=\"fa fa-map-o me-2\" title=\"Route\"/>"
-msgstr "<span class=\"fa fa-map-o me-2\" title=\"Ruta\"/>"
+msgid "<span>For:</span>"
+msgstr "<span>Para:</span>"
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__active
 #: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
 msgid "Active"
 msgstr "Activo"
 
 #. module: tms_shipment
-#. odoo-javascript
-#: code:addons/tms_shipment/static/src/js/driver_list.xml:0
-#, python-format
-msgid "Active drivers"
-msgstr "Activos"
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__active_tms_order_id
+msgid "Active Tms Order"
+msgstr "Viaje Activo"
 
 #. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Activos"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
+msgid "Actualizar viaje desde la Carta de Porte"
+msgstr ""
+
+#. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/res_partner.py:0
+#: model:ir.model.fields,field_description:tms_shipment.field_res_partner__alias_name
+#: model:ir.model.fields,field_description:tms_shipment.field_res_users__alias_name
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__alias_name
+#, python-format
+msgid "Alias"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_partner_form_inherit_tms
+msgid "Alias..."
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,help:tms_shipment.field_tms_order__is_active
 #: model:ir.model.fields,help:tms_shipment.field_tms_stage__is_active
 msgid "An active stage enforces the trip has started"
 msgstr ""
 
 #. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_tms_driver_location_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: tms_shipment
 #. odoo-javascript
 #: code:addons/tms_shipment/static/src/views/fields/many2many_trip_field.xml:0
-#: code:addons/tms_shipment/static/src/views/fields/many2many_trip_field.xml:0
 #, python-format
-msgid "Assign"
-msgstr "Asignar"
+msgid "Asignar"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.ui.menu,name:tms_shipment.menu_tms_dash_cpe
+msgid "CPE"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.res_partner_view_purchase_buttons_inherit
+msgid "CPEs"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_view_search
+msgid "CUIT"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_search_tms_shipment
+msgid "Camiones"
+msgstr ""
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
@@ -72,9 +149,46 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Cancelados"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_afip_cpe
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__cpe_id
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
+msgid "Carta de Porte"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Clientes"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__color
 msgid "Color"
 msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__custom_color
+msgid "Color Code"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__color
+msgid "Color Index"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__company_id
+msgid "Company"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.ui.menu,name:tms_shipment.menu_tms_dash_drivers
+msgid "Conductores"
+msgstr "Choferes"
 
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_res_partner
@@ -82,9 +196,19 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__contact_phone
+msgid "Contact Phone"
+msgstr "Teléfono de Contacto"
+
+#. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
 msgid "Create Sale"
 msgstr "Crear Venta"
+
+#. module: tms_shipment
+#: model_terms:ir.actions.act_window,help:tms_shipment.action_tms_driver_locations
+msgid "Create a Driver Location."
+msgstr "Crear una Ubicacion"
 
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_sale_order_trip
@@ -93,22 +217,40 @@ msgstr "Crear una venta con viajes"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__create_uid
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__create_uid
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__create_date
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__create_date
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__create_date
 msgid "Created on"
 msgstr "Creado el"
 
 #. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/tms_order.py:0
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__partner_id
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__customer_id
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
+#, python-format
 msgid "Customer"
 msgstr "Cliente"
 
 #. module: tms_shipment
+#: model:ir.model.fields,help:tms_shipment.field_tms_order__is_completed
+msgid "Defines how this stage is evaluated as completed stage"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_line_trip__destination
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__destination
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
 msgid "Destination"
@@ -121,15 +263,85 @@ msgstr "Detalles"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__display_name
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__display_name
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__display_name
 msgid "Display Name"
 msgstr "Nombre a Mostrar"
 
 #. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_view_search
+msgid "Disponibles"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__distance
+msgid "Distance"
+msgstr "Distancia"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__driver_ids
+msgid "Driver"
+msgstr "Chofer"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__driver_count
+msgid "Driver Count"
+msgstr "Choferes"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__driver_location_id
+msgid "Driver Location"
+msgstr "Ubicación"
+
+#. module: tms_shipment
+#: model:ir.actions.act_window,name:tms_shipment.action_tms_driver_locations
+#: model:ir.ui.menu,name:tms_shipment.menu_tms_driver_locations
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_location_view_tree
+msgid "Driver Locations"
+msgstr "Ubicaciones de Choferes"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__driver_phone
+msgid "Driver Phone"
+msgstr "Teléfono del Chofer"
+
+#. module: tms_shipment
 #. odoo-javascript
-#: code:addons/tms_shipment/static/src/js/driver_list.xml:0
+#: code:addons/tms_shipment/static/src/js/kanban_controller.xml:0
 #, python-format
 msgid "Drivers List"
 msgstr "Choferes"
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_view_search
+msgid "Email"
+msgstr ""
+
+#. module: tms_shipment
+#. odoo-javascript
+#: code:addons/tms_shipment/static/src/views/fields/trips_field.xml:0
+#, python-format
+msgid "En curso"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Etapas"
+msgstr ""
+
+#. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/tms_order.py:0
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__tag_ids
+#, python-format
+msgid "Etiquetas"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
+msgid "Fecha"
+msgstr ""
 
 #. module: tms_shipment
 #. odoo-javascript
@@ -139,29 +351,112 @@ msgid "Filter drivers"
 msgstr "Filtrar choferes"
 
 #. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Finalizados"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__fold
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__is_cancelled
+msgid "Folded in Kanban"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_view_search
+msgid "Group By"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Group by"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
+msgid "Hoy"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__id
 msgid "ID"
 msgstr ""
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__is_active
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_stage__is_active
 msgid "Is Active"
 msgstr "Activo"
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__is_completed
+msgid "Is Completed"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__is_default
+msgid "Is Default"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__write_uid
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__write_uid
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__write_date
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__write_date
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__write_date
 msgid "Last Updated on"
 msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
+msgid "My Orders"
+msgstr "Mis Ordenes"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__name
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__name
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_view_search
+msgid "Name"
+msgstr "Nombre"
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_tms_view_kanban
 msgid "New"
 msgstr "Nuevo"
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_order_form_inherit_tms_shipment
+msgid "New Trip"
+msgstr "Nuevo Viaje"
+
+#. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/fleet_vehicle.py:0
+#, python-format
+msgid "No Plate"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_tree
+msgid "Nuevo"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_tree
+msgid "Open"
+msgstr "Abrir"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_fleet_vehicle__operation
+msgid "Operation"
+msgstr "Operación"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__order_id
@@ -174,6 +469,11 @@ msgid "Order Confirmed"
 msgstr "Orden Confirmada"
 
 #. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_tms_order_tag
+msgid "Order Tag"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.actions.act_window,name:tms_shipment.action_tms_dash_sale
 #: model:ir.ui.menu,name:tms_shipment.menu_tms_dash_sale
 msgid "Orders"
@@ -183,6 +483,16 @@ msgstr "Ordenes"
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__origin
 msgid "Origin"
 msgstr "Origen"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__sale_order_label
+msgid "Pedido"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
+msgid "Pedidos"
+msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__product_id
@@ -199,6 +509,11 @@ msgstr "Ruta"
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
 msgid "Routs"
 msgstr "Rutas"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__sale_label
+msgid "Sale Label"
+msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_sale_order
@@ -233,12 +548,60 @@ msgid "Search users..."
 msgstr "Buscar usuarios..."
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__sequence
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__sequence
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order_tag__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_tms_driver
+msgid "TMS Drivers"
+msgstr "Choferes"
+
+#. module: tms_shipment
+#: model:ir.model.fields,help:tms_shipment.field_tms_order_tag__color
+msgid ""
+"Tag color. No color means no display in kanban or front-end, to distinguish "
+"internal tags from public categorization tags."
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,help:tms_shipment.field_tms_driver_location__fold
+#: model:ir.model.fields,help:tms_shipment.field_tms_order__is_cancelled
+msgid ""
+"This stage is folded in the kanban view when there are no record in that "
+"stage to display."
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_active
+msgid "Tms Active"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_destination_id
 msgid "Tms Destination"
 msgstr "Destino"
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_res_partner__tms_driver_id
+#: model:ir.model.fields,field_description:tms_shipment.field_res_partner__tms_driver_ids
+#: model:ir.model.fields,field_description:tms_shipment.field_res_users__tms_driver_id
+#: model:ir.model.fields,field_description:tms_shipment.field_res_users__tms_driver_ids
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__tms_driver_id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__tms_driver_ids
+msgid "Tms Driver"
+msgstr "Chofer"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_afip_cpe__tms_order_id
+msgid "Tms Order"
+msgstr "Viaje"
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_origin_id
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_line_trip__origin
 msgid "Tms Origin"
 msgstr "Origen"
 
@@ -246,6 +609,24 @@ msgstr "Origen"
 #: model_terms:ir.ui.view,arch_db:tms_shipment.res_partner_view_tree
 msgid "Toggle TMS Location"
 msgstr "(Des)Marcar como Ubicación"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_fleet_vehicle__trailer_id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__trailer_id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__trailer_id
+#: model:ir.model.fields.selection,name:tms_shipment.selection__fleet_vehicle__operation__trailer
+msgid "Trailer"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_search_tms_shipment
+msgid "Trailers"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_tms_driver_location
+msgid "Transport Management System Driver Location"
+msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_tms_order
@@ -260,6 +641,8 @@ msgstr "Etapa de Transporte"
 #. module: tms_shipment
 #. odoo-python
 #: code:addons/tms_shipment/models/sale_order.py:0
+#: code:addons/tms_shipment/models/sale_order.py:0
+#: code:addons/tms_shipment/models/tms_order.py:0
 #, python-format
 msgid "Transport Order"
 msgstr "Orden de Transporte"
@@ -270,9 +653,21 @@ msgid "Trip information"
 msgstr "Información del Viaje"
 
 #. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_driver_form_inherit
+msgid "Trips"
+msgstr "Viajes"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__trips_ids_count
+msgid "Trips Ids Count"
+msgstr ""
+
+#. module: tms_shipment
 #. odoo-javascript
 #: code:addons/tms_shipment/static/src/views/fields/many2many_trip_field.xml:0
 #: code:addons/tms_shipment/static/src/views/fields/many2many_trip_field.xml:0
+#: model:ir.model.fields,field_description:tms_shipment.field_fleet_vehicle__truck_id
+#: model:ir.model.fields,field_description:tms_shipment.field_fleet_vehicle__truck_ids
 #, python-format
 msgid "Truck"
 msgstr "Camión"
@@ -281,6 +676,16 @@ msgstr "Camión"
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__qty
 msgid "Trucks"
 msgstr "Camiones"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__driver_type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: tms_shipment
+#: model:ir.model.fields,help:tms_shipment.field_tms_driver_location__custom_color
+msgid "Use Hex Code only Ex:-#FFFFFF"
+msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__has_route
@@ -293,8 +698,50 @@ msgid "Use route"
 msgstr "Usar ruta"
 
 #. module: tms_shipment
+#: model:ir.model.fields,help:tms_shipment.field_tms_driver_location__sequence
+msgid "Used to order stages. Lower is first."
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_fleet_vehicle
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__vehicle_id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__vehicle_ids
+msgid "Vehicle"
+msgstr "Vehículo"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__vehicle_label
+msgid "Vehicle Label"
+msgstr ""
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.view_order_form_inherit_tms_shipment
+msgid "Viajes"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__warnings
+msgid "Warnings"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.ui.menu,name:tms_shipment.menu_tms_config_afip_locality
+msgid "afip localities"
+msgstr "Localidades ARCA"
+
+#. module: tms_shipment
+#: model:ir.ui.menu,name:tms_shipment.menu_tms_config_afip_states
+msgid "afip states"
+msgstr "Provincias ARCA"
+
+#. module: tms_shipment
 #. odoo-javascript
 #: code:addons/tms_shipment/static/src/views/fields/many2many_trip_field.xml:0
 #, python-format
 msgid "props.placeholder"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_sale_order_line_trip
+msgid "sale.order.line.trip"
 msgstr ""
