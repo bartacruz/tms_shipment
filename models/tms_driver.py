@@ -28,14 +28,31 @@ class TMSDriver(models.Model):
     vehicle_id = fields.Many2one('fleet.vehicle',compute='_compute_tms_vehicle', inverse='_inverse_tms_vehicle', domain="[('operation','=','cargo')]")
     trailer_id = fields.Many2one('fleet.vehicle', related='vehicle_id.trailer_id', readonly=True, store=True)
     
-    trips_ids_count = fields.Integer(compute='_compute_trips_ids')
+    trips_ids_count = fields.Integer(compute='_compute_trips_ids_count')
     active_tms_order_id = fields.Many2one("tms.order", compute="_compute_active_tms_order", store=True)
+    active_tms_order_stage_id = fields.Many2one("tms.stage", related="active_tms_order_id.stage_id", readonly=True)
     sequence = fields.Integer(default=100)
     
+    
     @api.depends('trips_ids')
-    def _compute_trips_ids(self):
+    def _compute_trips_ids_count(self):
         for record in self:
             record.trips_ids_count = len(record.trips_ids)
+            
+    @api.depends('trips_ids','active_tms_order_stage_id')
+    def _compute_active_tms_order(self):
+        for record in self:
+            old_active = record._origin.active_tms_order_id
+            record.active_tms_order_id = record.trips_ids.search([('driver_id','=',record.id),('is_active','=',True)],limit=1)
+            if record.active_tms_order_id:
+                record.driver_location_id = 1
+                record.stage_id = self.STAGE_ASSIGNED
+            elif record.stage_id.id == self.STAGE_ASSIGNED or old_active:
+                # Was assigned but not anymore => return to base
+                record.stage_id = self.STAGE_BASE
+                record.sequence=1000
+            # print('_compute_active_tms_order',old_active.name,record.active_tms_order_id.name,record.stage_id.name)
+    
         
     @api.depends('vehicle_ids')
     def _compute_tms_vehicle(self):
@@ -79,17 +96,7 @@ class TMSDriver(models.Model):
             if not record.driver_location_id:
                 record.driver_location_id = record._default_driver_location_id()
     
-    @api.depends('trips_ids')
-    def _compute_active_tms_order(self):
-        for record in self:
-            old_active = record._origin.active_tms_order_id
-            record.active_tms_order_id = record.trips_ids.search([('driver_id','=',record.id),('is_active','=',True)],limit=1)
-            if record.active_tms_order_id:
-                record.driver_location_id = 1
-                record.stage_id = self.STAGE_ASSIGNED
-            elif record.stage_id.id == self.STAGE_ASSIGNED or old_active:
-                # Was assigned but not anymore => return to base
-                record.stage_id = self.STAGE_BASE
+    
             
     def action_view_tms_orders(self):
         self.ensure_one()

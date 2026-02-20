@@ -51,9 +51,11 @@ class TMSOrder(models.Model):
             record.warnings = ''
             if record.is_active  and record.driver_id and not record.driver_id.vehicle_id:
                 record.warnings += "El conductor no tiene vehículo asignado\n"
-            if record.is_active and record.driver_id and record.driver_id.active_tms_order_id != record:
-                print("warn",record,record.driver_id.active_tms_order_id,record)
-                record.warnings += "El conductor está asignado en otra orden (%s)\n" % record.driver_id.active_tms_order_id
+            if record.is_active and record.driver_id:
+                record.driver_id._compute_active_tms_order()
+                if record.driver_id.active_tms_order_id != record:
+                    print("warn",record,record.driver_id.active_tms_order_id,record)
+                    record.warnings += "El conductor está asignado en otra orden (%s)\n" % record.driver_id.active_tms_order_id.name
                 
     @api.depends('customer_id')
     def _compute_contact_phone(self):
@@ -110,30 +112,32 @@ class TMSOrder(models.Model):
     
     @api.model
     def write(self, vals):
-        for order in self:
-            if "stage_id" in vals:
-                actives = self.env["tms.stage"].search([("is_active", "=", True)]).ids
-                completed = self.env.ref("tms.tms_stage_order_completed")
-                
-                print("Stage change to ", vals["stage_id"], " actives: ", actives)
-                if vals["stage_id"] in actives:
-                    # TODO: add configurable option for auto-start
-                    if not order.start_trip:
-                        print("starting trip")
-                        vals["start_trip"] = True
-                        vals["date_start"] = order.date_start or datetime.now()
-                    else:
-                        print("already started")
-                elif vals["stage_id"] == completed.id:
-                    # TODO: add configurable option for auto-end
-                    if not order.end_trip:
-                        print("ending completed trip")
-                        vals["end_trip"] = True
-                        vals["date_end"] = order.date_end or datetime.now()
-                    else:
-                        print("already ended")
-                order.sale_id._compute_tms_active()
+        
+        if "stage_id" in vals:
+            actives = self.env["tms.stage"].search([("is_active", "=", True)]).ids
+            completed = self.env.ref("tms.tms_stage_order_completed")
+            
+            print("Stage change to ", vals["stage_id"], " actives: ", actives)
+            if vals["stage_id"] in actives:
+                # TODO: add configurable option for auto-start
+                if not self.start_trip:
+                    print("starting trip")
+                    vals["start_trip"] = True
+                    vals["date_start"] = self.date_start or datetime.now()
+                    vals["date_end"] = False
+                else:
+                    print("already started")
+            elif vals["stage_id"] == completed.id:
+                # TODO: add configurable option for auto-end
+                if not self.end_trip:
+                    print("ending completed trip")
+                    vals["end_trip"] = True
+                    vals["date_end"] = self.date_end or datetime.now()
+                else:
+                    print("already ended")
+                    
         ret = super().write(vals)
+        self.sale_id._compute_tms_active()
         if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids',]):
             print("sending order_changed",self.id,self.sale_id)
             self.env['bus.bus']._sendone('tms','order_changed',{'id':self.id,'order_id':self.sale_id.id})
