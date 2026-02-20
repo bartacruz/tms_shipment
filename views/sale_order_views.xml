@@ -87,6 +87,10 @@
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="tms_origin_id" />
+                <field name="tms_destination_id" />
                 <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_tms_sale_orders_filter"/>
                 <group name="sale_dates" string="Fecha">
                     <filter string="Hoy" name="filter_today_creation"
