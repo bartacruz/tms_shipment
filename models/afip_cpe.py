@@ -10,6 +10,11 @@ class AfipCPE(models.Model):
             order_id = self.env['tms.order'].search([ ('cpe_id','=',record.id) ],limit=1)
             record.tms_order_id = order_id
     
+    def action_update_cpe(self):
+         ret = super().action_update_cpe()
+         if ret and self.tms_order_id:
+            self.tms_order_id.action_update_from_cpe()
+    
     def action_view_tms_order(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(
             "tms.action_tms_dash_order"

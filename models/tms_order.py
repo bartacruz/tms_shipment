@@ -4,7 +4,7 @@
 from random import randint
 from datetime import datetime, timedelta
 from odoo import _, api, fields, models
-
+from markupsafe import Markup
 class TMSOrderTag(models.Model):
     _name = "tms.order.tag"
     _description = "Order Tag"
@@ -141,6 +141,9 @@ class TMSOrder(models.Model):
         if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids',]):
             print("sending order_changed",self.id,self.sale_id)
             self.env['bus.bus']._sendone('tms','order_changed',{'id':self.id,'order_id':self.sale_id.id})
+        if 'cpe_id' in vals and self.cpe_id:
+            self.cpe_id.action_update_cpe()
+        
     
     
     def action_create_tms_order(self):
@@ -165,6 +168,7 @@ class TMSOrder(models.Model):
     def action_update_from_cpe(self):
         for record in self:
             cpe = record.cpe_id
+            old_stage = record.stage_id
             if cpe.customer_id:
                 record.customer_id = cpe.customer_id
                 record.sale_id.partner_invoice_id = cpe.customer_id
@@ -181,6 +185,15 @@ class TMSOrder(models.Model):
                     record.date_end = cpe.status_date
                 elif cpe.status == 'AN':
                     record.stage_id = self.env.ref("tms.tms_stage_order_cancelled")
+            if record.stage_id != old_stage and record.cpe_id:
+                message = _(
+                    "Orden actualizada desde la carta de porte: %s",
+                    Markup(
+                        f"""<a href=# data-oe-model=afip.cpe data-oe-id={record.cpe_id.id}"""
+                        f""">{record.cpe_id.name}</a>"""
+                    ),
+                )
+                self.message_post(body=message)
     
     def button_end_order(self):
         super().button_end_order()
