@@ -6,6 +6,7 @@ class SaleOrderTrip(models.TransientModel):
 
     order_id = fields.Many2one('sale.order', string="Order")
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
+    commitment_date = fields.Datetime(string="Fecha de Entrega", default=fields.Datetime.now)
     product_id = fields.Many2one('product.product', default=10)
     has_route = fields.Boolean(string="Use Routes")
     route = fields.Many2one("tms.route")
@@ -49,6 +50,7 @@ class SaleOrderTrip(models.TransientModel):
         ]
         vals_list = [{
             "partner_id": self.partner_id.id,
+            "commitment_date": self.commitment_date,
             "state": "sale",
             "order_line": order_line*self.qty,
         } ]

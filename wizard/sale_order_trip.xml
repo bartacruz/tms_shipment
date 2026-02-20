@@ -62,6 +62,7 @@
                     <group>
                         
                         <field name="product_id" filter_domain="[('tms_trip','=',True)]"/>
+                        <field name="commitment_date" widget="datetime" options="{'show_time': false}"/>
                     </group>
                     <group>
                         <field name="qty" />
