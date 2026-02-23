@@ -49,12 +49,15 @@
                 <group name="tms_route" string="Routs" groups="!tms.group_tms_route">
                     <group>
                         <field name="origin" readonly="order_confirmed" />
+                        <field name="origin_locality" readonly="order_confirmed" context="{'order_by':'tms_order_count desc, name'}"/>
                     </group>
                     <group>
                         <label for="destination">Destination</label>
                         <div class="o_row">
                             <field name="destination" readonly="order_confirmed" />
+                            
                         </div>
+                        <field name="destination_locality" readonly="order_confirmed" />
                     </group>
 
                 </group>

@@ -10,6 +10,8 @@ class SaleOrderTrip(models.TransientModel):
     product_id = fields.Many2one('product.product', default=10)
     has_route = fields.Boolean(string="Use Routes")
     route = fields.Many2one("tms.route")
+    origin_locality = fields.Many2one('afip.locality')
+    destination_locality = fields.Many2one('afip.locality')
     origin = fields.Many2one(
         "res.partner",
         domain="[('tms_location', '=', 'True'), ('parent_id','=',partner_id)]",
@@ -42,8 +44,10 @@ class SaleOrderTrip(models.TransientModel):
             (0, 0, {'product_id': self.product_id.id, 
                     "product_uom_qty": 1,
                     "product_uom": self.product_id.uom_id.id,
-                    'tms_origin_id':self.origin.id, 
+                    'tms_origin_id':self.origin.id,
+                    'tms_origin_locality_id':self.origin_locality.id,
                     'tms_destination_id':self.destination.id,
+                    'tms_destination_locality_id':self.destination_locality.id,
                     'tms_factor': self.distance
                     }
                 ) 
@@ -52,6 +56,8 @@ class SaleOrderTrip(models.TransientModel):
             "partner_id": self.partner_id.id,
             "commitment_date": self.commitment_date,
             "state": "sale",
+            'tms_origin_locality_id':self.origin_locality.id,
+            'tms_destination_locality_id':self.destination_locality.id,
             "tms_distance": self.distance,
             "order_line": order_line*self.qty,
         } ]

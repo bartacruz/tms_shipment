@@ -34,11 +34,14 @@ class TMSOrder(models.Model):
     vehicle_label = fields.Char(compute='_compute_vehicle_label',readonly=True, store=True)
     contact_phone = fields.Char(compute = '_compute_contact_phone')
     driver_phone =  fields.Char(compute='_compute_driver_phone')
+    origin_locality_id = fields.Many2one('afip.locality')
+    origin_state_id = fields.Many2one('res.country.state', related="origin_locality_id.state_id")
+    destination_locality_id = fields.Many2one('afip.locality')
+    destination_state_id = fields.Many2one('res.country.state', related="destination_locality_id.state_id")
     
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
     
     warnings = fields.Char(compute="_compute_warnings")
-    
     
     @api.model
     def _sale_id_expand_groups(self, records, domain, order):
@@ -174,8 +177,12 @@ class TMSOrder(models.Model):
                 record.sale_id.partner_invoice_id = cpe.customer_id
             if cpe.origin_id:
                 record.origin_id = cpe.origin_id
+            if cpe.origin_locality_id:
+                record.origin_locality_id = cpe.origin_locality_id
             if cpe.destination_id:
                 record.destination_id = cpe.destination_id
+            if cpe.destination_locality_id:
+                record.destination_locality_id = cpe.destination_locality_id
             if cpe.transport_ids:
                 record.vehicle_id = cpe.transport_ids[0].vehicle_id
                 record.date_start = cpe.transport_ids[0].start_date

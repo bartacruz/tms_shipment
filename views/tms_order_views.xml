@@ -34,8 +34,8 @@
                 <field name="scheduled_date_start" optional="show" />
                 <field name="sale_order_label" optional="hide" />
                 <field name="customer_id" optional="hide" />
-                <field name="origin_id" readonly="True" />
-                <field name="destination_id" readonly="True" />
+                <field name="origin_locality_id" readonly="True" />
+                <field name="destination_locality_id" readonly="True" />
                 <field name="sale_id" optional="hide" readonly="True" />
                 <field name="is_active" optional="hide" readonly="True" />
                 <field name="is_completed" optional="hide" readonly="True" />
@@ -103,8 +103,13 @@
                 position="before">
                 <field name="contact_phone" widget="phone" />
             </xpath>
+            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']"
+                position="after">
+                <field name="origin_locality_id" />
+            </xpath>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']"
                 position="after">
+                <field name="destination_locality_id" />
                 <label for="cpe_id" string="Carta de Porte"/>
                 <div>
                     <field name="cpe_id" />
@@ -117,10 +122,16 @@
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']"
                 position="attributes">
                 <attribute name="domain">[('tms_location','=',True),('parent_id','=',customer_id)]</attribute>
+                <attribute name="required">False</attribute>
+                <attribute name="widget">res_partner_many2one</attribute>
+                <attribute name="context">{'show_address': 1, 'show_vat': False}</attribute>
             </xpath>
             <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']"
                 position="attributes">
                 <attribute name="domain">[('tms_location','=',True),('parent_id','=',None)]</attribute>
+                <attribute name="required">False</attribute>
+                <attribute name="widget">res_partner_many2one</attribute>
+                <attribute name="context">{'show_address': 1, 'show_vat': False}</attribute>
             </xpath>
             <xpath expr="//group[@name='description_grp']" position="before">
                 <group name="tags">

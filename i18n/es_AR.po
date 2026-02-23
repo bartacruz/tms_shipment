@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-13 19:13+0000\n"
-"PO-Revision-Date: 2026-02-13 19:13+0000\n"
+"POT-Creation-Date: 2026-02-23 20:39+0000\n"
+"PO-Revision-Date: 2026-02-23 20:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "<i class=\"fa fa-truck mx-2\" title=\"Camión\"/>"
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_kanban_tms_shipment
-msgid "<i class=\"fa fa-user mx-2\" title=\"Conductor\"/>"
+msgid "<i class=\"fa fa-user mx-2\" title=\"Driver\"/>"
 msgstr ""
 
 #. module: tms_shipment
@@ -254,7 +254,13 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__destination
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
 msgid "Destination"
-msgstr "Destino"
+msgstr "Ubicación de Destino"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__destination_locality
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__destination_locality_id
+msgid "Destination Locality"
+msgstr "Localidad de Destino"
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
@@ -341,6 +347,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
 #: model_terms:ir.ui.view,arch_db:tms_shipment.view_sale_order_tms_search
 msgid "Fecha"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__commitment_date
+msgid "Fecha de Entrega"
 msgstr ""
 
 #. module: tms_shipment
@@ -459,6 +470,13 @@ msgid "Operation"
 msgstr "Operación"
 
 #. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/tms_order.py:0
+#, python-format
+msgid "Orden actualizada desde la carta de porte: %s"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__order_id
 msgid "Order"
 msgstr "Orden"
@@ -482,7 +500,13 @@ msgstr "Ordenes"
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__origin
 msgid "Origin"
-msgstr "Origen"
+msgstr "Ubicación de Origen"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__origin_locality
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__origin_locality_id
+msgid "Origin Locality"
+msgstr "Localidad de Origen"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__sale_order_label
@@ -555,6 +579,17 @@ msgid "Sequence"
 msgstr ""
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__active_tms_order_stage_id
+msgid "Stage"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__destination_state_id
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__origin_state_id
+msgid "State"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_tms_driver
 msgid "TMS Drivers"
 msgstr "Choferes"
@@ -582,7 +617,23 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_destination_id
 msgid "Tms Destination"
+msgstr "Ubicación de Destino"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_destination_label
+msgid "Tms Destination Label"
 msgstr "Destino"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_destination_locality_id
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_line__tms_destination_locality_id
+msgid "Tms Destination Locality"
+msgstr "Localidad de Destino"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_distance
+msgid "Tms Distance"
+msgstr "Distancia"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_res_partner__tms_driver_id
@@ -595,15 +646,37 @@ msgid "Tms Driver"
 msgstr "Chofer"
 
 #. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_afip_cpe__tms_has_order
+msgid "Tms Has Order"
+msgstr ""
+
+#. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_afip_cpe__tms_order_id
+#: model:ir.model.fields,field_description:tms_shipment.field_afip_locality__tms_order_ids
 msgid "Tms Order"
 msgstr "Viaje"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_afip_locality__tms_order_count
+msgid "Tms Order Count"
+msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_origin_id
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_line_trip__origin
 msgid "Tms Origin"
+msgstr "Ubicación Origen"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_origin_label
+msgid "Tms Origin Label"
 msgstr "Origen"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_origin_locality_id
+#: model:ir.model.fields,field_description:tms_shipment.field_sale_order_line__tms_origin_locality_id
+msgid "Tms Origin Locality"
+msgstr "Localidad de Origen"
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.res_partner_view_tree
@@ -626,7 +699,7 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_tms_driver_location
 msgid "Transport Management System Driver Location"
-msgstr ""
+msgstr "Ubicación"
 
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_tms_order
@@ -733,6 +806,11 @@ msgstr "Localidades ARCA"
 #: model:ir.ui.menu,name:tms_shipment.menu_tms_config_afip_states
 msgid "afip states"
 msgstr "Provincias ARCA"
+
+#. module: tms_shipment
+#: model:ir.model,name:tms_shipment.model_afip_locality
+msgid "afip.locality"
+msgstr ""
 
 #. module: tms_shipment
 #. odoo-javascript

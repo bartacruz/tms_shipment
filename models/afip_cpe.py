@@ -4,14 +4,16 @@ class AfipCPE(models.Model):
     _inherit = 'afip.cpe'
     
     tms_order_id = fields.Many2one('tms.order', compute='_compute_tms_order_id')
+    tms_has_order = fields.Boolean(compute="_compute_tms_order_id", store=True)
     
     def _compute_tms_order_id(self):
         for record in self:
             order_id = self.env['tms.order'].search([ ('cpe_id','=',record.id) ],limit=1)
             record.tms_order_id = order_id
+            record.tms_has_order = len(order_id) > 0
     
-    def action_update_cpe(self):
-         ret = super().action_update_cpe()
+    def action_update_cpe(self, force=False):
+         ret = super().action_update_cpe(force=force)
          if ret and self.tms_order_id:
             self.tms_order_id.action_update_from_cpe()
     
@@ -25,3 +27,22 @@ class AfipCPE(models.Model):
         else:
             action = {"type": "ir.actions.act_window_close"}
         return action
+    
+class AfipLocality(models.Model):
+    _inherit="afip.locality"
+    _order = "tms_order_count desc, afip_state_id, name"
+    tms_order_ids = fields.Many2many('tms.order', compute="_compute_tms_orders")
+    tms_order_count = fields.Integer(compute = '_compute_tms_order_count', store=True)
+    
+    def _compute_tms_orders(self):
+        for record in self:
+            record.tms_order_ids = self.env['tms.order'].search([
+                '|',
+                ('origin_locality_id','=',record.id),
+                ('destination_locality_id','=',record.id),
+            ])
+    
+    @api.depends('tms_order_ids')
+    def _compute_tms_order_count(self):
+        for record in self:
+            record.tms_order_count = len(record.tms_order_ids)

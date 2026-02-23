@@ -3,11 +3,13 @@ from odoo import _, api, fields, models
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
-    
     tms_origin_id = fields.Many2one(
         "res.partner",
         compute="_compute_tms_origin"
     )
+    tms_origin_locality_id = fields.Many2one("afip.locality")
+    tms_origin_label = fields.Char(compute="_compute_tms_labels")
+    
     tms_destination_id = fields.Many2one(
         "res.partner",
         compute="_compute_tms_destination"
@@ -17,9 +19,27 @@ class SaleOrder(models.Model):
         # store=True,
         # readonly=False,
     )
+    tms_destination_locality_id = fields.Many2one("afip.locality")
+    tms_destination_label = fields.Char(compute="_compute_tms_labels")
+    
     tms_distance = fields.Integer()
     tms_active = fields.Boolean(compute="_compute_tms_active", store=True)
     
+    @api.depends('tms_origin_id','tms_origin_locality_id','tms_destination_id','tms_destination_locality_id')
+    def _compute_tms_labels(self):
+        for record in self:
+            if record.tms_origin_id:
+                if record.tms_origin_id.name.startswith("Planta"):
+                    record.tms_origin_label=record.tms_origin_id.city.title()
+                else:
+                    record.tms_origin_label = record.tms_origin_id.display_name.title()
+            else:
+                record.tms_origin_label = record.tms_origin_locality_id.name.title()
+            if record.tms_destination_id and not record.tms_destination_id.name.startswith("Planta") :
+                record.tms_destination_label = record.tms_destination_id.display_name
+            else:
+                record.tms_destination_label = record.tms_destination_locality_id.name.title()
+                
     @api.depends('tms_order_ids','state')
     def _compute_tms_active(self):
         for record in self:
@@ -35,13 +55,20 @@ class SaleOrder(models.Model):
             shipping = parent.address_get(['delivery'])['delivery']
             order.partner_shipping_id = shipping or order.partner_invoice_id
     
+    @api.depends('tms_order_ids')
     def _compute_tms_origin(self):
         for record in self:
             record.tms_origin_id = fields.first(record.tms_order_ids).origin_id
+            if not record.tms_origin_locality_id:
+                record.tms_origin_locality_id = fields.first(record.tms_order_ids).origin_locality_id
+            
     
+    @api.depends('tms_order_ids')
     def _compute_tms_destination(self):
         for record in self:
             record.tms_destination_id = fields.first(record.tms_order_ids).destination_id
+            if not record.tms_destination_locality_id:
+                record.tms_destination_locality_id = fields.first(record.tms_order_ids).destination_locality_id
 
     def action_create_tms_order(self):
         vid = self.env.ref('tms_shipment.sale_order_trip_view_form').id

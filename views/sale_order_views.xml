@@ -14,8 +14,8 @@
             >
                 <field name="partner_id" />
                 <field name="partner_invoice_id" />
-                <field name="tms_origin_id" />
-                <field name="tms_destination_id" />
+                <field name="tms_origin_label" />
+                <field name="tms_destination_label" />
                 <field name="tms_order_ids" />
                 <field name="tag_ids" />
                 <field name="tms_active" />
@@ -49,9 +49,9 @@
                                             </strong>
                                         </div>
                                         <div class="text-muted o_row">
-                                            <field name="tms_origin_id" />
+                                            <field name="tms_origin_label" />
                                             <i class="fa fa-long-arrow-right mx-2 oe_read_only" />
-                                            <field name="tms_destination_id" />
+                                            <field name="tms_destination_label" />
                                         </div>
 
                                         <t
@@ -137,8 +137,10 @@
                 <field name="commitment_date"/>
             </xpath>
             <xpath expr="//group[@name='order_details']" position="inside">
-                <field name="tms_origin_id"/>
-                <field name="tms_destination_id" />
+                <field name="tms_origin_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}"/>
+                <field name="tms_origin_locality_id"/>
+                <field name="tms_destination_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}"/>
+                <field name="tms_destination_locality_id" />
             </xpath>
             <xpath expr="//page[@name='order_lines']" position="before">
                 <page string="Viajes" name="tms_orders">
