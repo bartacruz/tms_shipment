@@ -52,6 +52,7 @@ class SaleOrderTrip(models.TransientModel):
             "partner_id": self.partner_id.id,
             "commitment_date": self.commitment_date,
             "state": "sale",
+            "tms_distance": self.distance,
             "order_line": order_line*self.qty,
         } ]
         print("vals",vals_list)

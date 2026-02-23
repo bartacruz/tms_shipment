@@ -143,7 +143,7 @@ class TMSOrder(models.Model):
             self.env['bus.bus']._sendone('tms','order_changed',{'id':self.id,'order_id':self.sale_id.id})
         if 'cpe_id' in vals and self.cpe_id:
             self.cpe_id.action_update_cpe()
-        
+        return ret
     
     
     def action_create_tms_order(self):
@@ -204,6 +204,7 @@ class TMSOrder(models.Model):
         order = self.browse(order_id)
         
         order.driver_id = int(driver_id)
+        order._onchange_driver_id()
         print("Assigned driver %s to order %s" % (driver_id,order_id))
         return order.id
     

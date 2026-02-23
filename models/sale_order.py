@@ -17,6 +17,7 @@ class SaleOrder(models.Model):
         # store=True,
         # readonly=False,
     )
+    tms_distance = fields.Integer()
     tms_active = fields.Boolean(compute="_compute_tms_active", store=True)
     
     @api.depends('tms_order_ids','state')
@@ -24,7 +25,7 @@ class SaleOrder(models.Model):
         for record in self:
             stages = [stage.is_completed or stage.is_cancelled for stage in record.tms_order_ids]
             #print("_compute_tms_active",stages)
-            record.tms_active = not all(stages)
+            record.tms_active = record.state == 'sale' and not all(stages)
     
     @api.depends('partner_invoice_id')
     def _compute_partner_shipping_id(self):
@@ -58,6 +59,7 @@ class SaleOrder(models.Model):
             "name": _("Transport Order"),
             "type": "ir.actions.act_window",
             "res_model": "sale.order.trip",
+            'view_mode': 'form',
             "target": "new",
             "context": {"is_modal": True},
         }
