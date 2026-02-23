@@ -35,8 +35,11 @@ class SaleOrder(models.Model):
                     record.tms_origin_label = record.tms_origin_id.display_name.title()
             else:
                 record.tms_origin_label = record.tms_origin_locality_id.name.title()
-            if record.tms_destination_id and not record.tms_destination_id.name.startswith("Planta") :
-                record.tms_destination_label = record.tms_destination_id.display_name
+            if record.tms_destination_id:
+                if record.tms_destination_id.name.startswith("Planta") :
+                    record.tms_destination_label = record.tms_destination_id.city.title()
+                else:
+                    record.tms_destination_label = record.tms_destination_id.display_name
             else:
                 record.tms_destination_label = record.tms_destination_locality_id.name.title()
                 
