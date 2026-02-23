@@ -31,18 +31,18 @@ class AfipCPE(models.Model):
 class AfipLocality(models.Model):
     _inherit="afip.locality"
     _order = "tms_order_count desc, afip_state_id, name"
-    tms_order_ids = fields.Many2many('tms.order', compute="_compute_tms_orders")
+    
+    tms_order_ids = fields.Many2many('tms.order', compute='_compute_tms_orders')
+    tms_order_origin_ids = fields.One2many('tms.order', 'origin_locality_id')
+    tms_order_destination_ids = fields.One2many('tms.order', 'destination_locality_id')
     tms_order_count = fields.Integer(compute = '_compute_tms_order_count', store=True)
     
+    @api.depends('tms_order_origin_ids', 'tms_order_destination_ids')
     def _compute_tms_orders(self):
         for record in self:
-            record.tms_order_ids = self.env['tms.order'].search([
-                '|',
-                ('origin_locality_id','=',record.id),
-                ('destination_locality_id','=',record.id),
-            ])
+            record.tms_order_ids = record.tms_order_origin_ids + record.tms_order_destination_ids
     
-    @api.depends('tms_order_ids')
+    @api.depends('tms_order_origin_ids', 'tms_order_destination_ids')
     def _compute_tms_order_count(self):
         for record in self:
-            record.tms_order_count = len(record.tms_order_ids)
+            record.tms_order_count = len(record.tms_order_origin_ids) + len(record.tms_order_destination_ids)
