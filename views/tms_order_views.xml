@@ -16,8 +16,9 @@
             </xpath>
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable">top</attribute>
-                <attribute name="create">0</attribute>
+                <attribute name="create">true</attribute>
                 <attribute name="expand">context.get('expand', False)</attribute>
+                <attribute name="default_order">create_date desc</attribute>
                 <!-- <attribute name="default_group_by">sale_order_label</attribute> -->
             </xpath>
             <xpath expr="//field[@name='name']" position="attributes">

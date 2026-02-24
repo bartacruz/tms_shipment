@@ -1,5 +1,5 @@
 from odoo import _, api, fields, models
-
+from markupsafe import Markup
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -86,15 +86,53 @@ class SaleOrder(models.Model):
         }
         
     def action_new_trip_sale(self):
-        return {
-            "name": _("Transport Order"),
-            "type": "ir.actions.act_window",
-            "res_model": "sale.order.trip",
-            'view_mode': 'form',
-            "target": "new",
-            "context": {"is_modal": True},
-        }
+        product_id = self.env["product.product"].browse(10)
+        sl = self.order_line.create({
+            'product_id': product_id.id, 
+            "product_uom_qty": 1,
+            "product_uom": product_id.uom_id.id,
+            'tms_origin_id':self.tms_origin_id and self.tms_origin_id.id,
+            'tms_origin_locality_id':self.tms_origin_locality_id and self.tms_origin_locality_id.id,
+            'tms_destination_id':self.tms_destination_id and self.tms_destination_id.id,
+            'tms_destination_locality_id':self.tms_destination_locality_id and self.tms_destination_locality_id.id,
+            'tms_factor': self.tms_distance,
+            'order_id': self.id,
+        }) 
+        self._tms_generation()
+        return sl
         
+        # return {
+        #     "name": _("Transport Order"),
+        #     "type": "ir.actions.act_window",
+        #     "res_model": "sale.order.trip",
+        #     'view_mode': 'form',
+        #     "target": "new",
+        #     "context": {"is_modal": True},
+        # }
+    
+    def _post_tms_message(self, tms_orders):
+        """
+        Post messages to the Sale Order and the newly created TMS Orders
+        """
+        self.ensure_one()
+        for tms_order in tms_orders:
+            
+            # tms_order.message_mail_with_source(
+            #     "mail.message_origin_link",
+            #     render_values={"self": tms_order, "origin": self},
+            #     subtype_id=self.env.ref("mail.mt_note").id,
+            #     author_id=self.env.user.partner_id.id,
+            # )
+            message = _(
+                "Transport Order(s) Created: %s",
+                Markup(
+                    f"""<a href=# data-oe-model=tms.order data-oe-id={tms_order.id}"""
+                    f""">{tms_order.name}</a>"""
+                ),
+            )
+            print("posting messsage",message)
+            self.message_post(body=message)
+            
     def action_view_trip_sale_order_line(self):
         action = super().action_view_trip_sale_order_line()
         action['context']={"default_origin":self.tms_origin_id}
