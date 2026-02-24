@@ -40,7 +40,7 @@ class TMSOrder(models.Model):
     destination_state_id = fields.Many2one('res.country.state', related="destination_locality_id.state_id")
     
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
-    
+    distance = fields.Integer()
     warnings = fields.Char(compute="_compute_warnings")
     
     @api.model
@@ -186,6 +186,7 @@ class TMSOrder(models.Model):
             if cpe.transport_ids:
                 record.vehicle_id = cpe.transport_ids[0].vehicle_id
                 record.date_start = cpe.transport_ids[0].start_date
+                record.distance = cpe.transport_ids[0].distance
                 if cpe.status == 'CN':
                     record.stage_id = self.env.ref("tms.tms_stage_order_completed")
                     record.end_trip = True

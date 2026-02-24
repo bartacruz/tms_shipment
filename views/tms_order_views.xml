@@ -91,51 +91,38 @@
         <field name="model">tms.order</field>
         <field name="inherit_id" ref="tms.tms_order_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="after">
-                <field name="customer_id" />
-            </xpath>
-            <field name="vehicle_id" position="replace" />
-            <field name="driver_id" position="after">
-                <field name="driver_phone" widget="phone"/>
-                <field name="vehicle_id" />
-                <field name="trailer_id" />
+            <field name="active" position="after" >
+                <field name="name" invisible="1"/>
+                <field name="route" invisible="1"/>
             </field>
-            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']"
-                position="before">
+            <div class="oe_title" position="replace">
+                <div class="oe_title">
+                        <label for="customer_id" class="oe_edit_only" string="Customer" />
+                        <h1>
+                            <field name="customer_id" />
+                        </h1>
+                    </div>
+            </div>
+            <field name="vehicle_id" position="replace" />
+            <field name="driver_id" position="replace">
                 <field name="contact_phone" widget="phone" />
-            </xpath>
-            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']"
-                position="after">
+                <field name="origin_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}" domain="[('tms_location','=',True),('parent_id','=',customer_id)]" required="False"/>
                 <field name="origin_locality_id" />
-            </xpath>
-            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']"
-                position="after">
+                <field name="destination_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}" domain="[('tms_location','=',True),('parent_id','=',False)]" required="False"/>
                 <field name="destination_locality_id" />
-                <label for="cpe_id" string="Carta de Porte"/>
-                <div>
-                    <field name="cpe_id" />
-                    <button name="action_update_from_cpe" type="object" icon="fa-refresh" string="Actualizar viaje desde la Carta de Porte" 
-                        invisible="not cpe_id"
-                        class="btn btn-link pt-0"/>
-                </div>
-                
-            </xpath>
-            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='origin_id']"
-                position="attributes">
-                <attribute name="domain">[('tms_location','=',True),('parent_id','=',customer_id)]</attribute>
-                <attribute name="required">False</attribute>
-                <attribute name="widget">res_partner_many2one</attribute>
-                <attribute name="context">{'show_address': 1, 'show_vat': False}</attribute>
-            </xpath>
-            <xpath expr="//group[@groups='!tms.group_tms_route']/field[@name='destination_id']"
-                position="attributes">
-                <attribute name="domain">[('tms_location','=',True),('parent_id','=',None)]</attribute>
-                <attribute name="required">False</attribute>
-                <attribute name="widget">res_partner_many2one</attribute>
-                <attribute name="context">{'show_address': 1, 'show_vat': False}</attribute>
-            </xpath>
-            <xpath expr="//group[@name='description_grp']" position="before">
-                <group name="tags">
+                <field name="cpe_id" />
+            </field>
+            <xpath expr="//group[@groups='!tms.group_tms_route']" position="replace" />
+            <xpath expr="//group[@groups='tms.group_tms_route']" position="replace" />
+            <xpath expr="//group//group" position="after" >
+                <group>
+                    <field name="driver_id"/>
+                    <field name="driver_phone" widget="phone"/>
+                    <label for="vehicle_id" string="Vehicle"/>
+                    <div class="d-flex">
+                        <field name="vehicle_id" /><field name="trailer_id" />
+                    </div>
+                    <field name="distance" />
                     <field name="tag_ids" widget="many2many_tags"/>
                 </group>
             </xpath>
