@@ -19,8 +19,9 @@
                         <span t-out="trip.text" t-if="trip.driver == false"/>
                     </div>
                     <div>
-                        <i t-if="trip.warnings" t-att-title="trip.warnings" class="fa fa-warning text-warning" />
-                        <i t-if="trip.running" title="En curso" class="fa fa-truck text-primary"/>
+                        <i t-if="trip.warnings" t-att-title="trip.warnings" class="ms-1 fa fa-warning text-warning" />
+                        <i t-if="trip.running" title="En curso" class="ms-1 fa fa-truck text-primary"/>
+                        <i t-if="trip.cpe" t-attf-title="CPE: {{trip.cpe}}" class="ms-1 fa fa-file-text-o text-primary"/>
                     </div>
                 </div>   
                 <div class="d-flex justify-content-between">

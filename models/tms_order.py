@@ -3,7 +3,7 @@
 
 from random import randint
 from datetime import datetime, timedelta
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from markupsafe import Markup
 class TMSOrderTag(models.Model):
     _name = "tms.order.tag"
@@ -23,7 +23,7 @@ class TMSOrderTag(models.Model):
 class TMSOrder(models.Model):
     _inherit = "tms.order"
     
-    customer_id = fields.Many2one("res.partner", _("Customer"), related="sale_id.partner_id", store=True)
+    customer_id = fields.Many2one("res.partner", _("Customer"), related="sale_id.partner_shipping_id", store=True)
     sale_order_label = fields.Char("Pedido", compute = '_compute_sale_order_label', store=True, readonly=True, group_expand='_sale_id_expand_groups')
     color = fields.Integer("Color",compute = '_compute_tms_color')
     tag_ids = fields.Many2many('tms.order.tag', string=_("Etiquetas"))
@@ -40,15 +40,24 @@ class TMSOrder(models.Model):
     destination_state_id = fields.Many2one('res.country.state', related="destination_locality_id.state_id")
     
     cpe_id = fields.Many2one("afip.cpe","Carta de Porte",ondelete="set null")
+    cpe_mismatch = fields.Boolean()
+    
     distance = fields.Integer()
+    
     warnings = fields.Char(compute="_compute_warnings")
+    has_warnings = fields.Boolean(compute="_compute_has_warnings", store=True,readonly=True)
     
     @api.model
     def _sale_id_expand_groups(self, records, domain, order):
         print("_expand_", records,domain,order)
         return records[::-1]
     
-    @api.depends('driver_id')
+    @api.depends('driver_id','is_active','cpe_mismatch', 'vehicle_id')
+    def _compute_has_warnings(self):
+        for record in self:
+            record.has_warnings = len(record.warnings) > 0
+        
+    @api.depends('driver_id','is_active','cpe_mismatch','vehicle_id')
     def _compute_warnings(self):
         for record in self:
             record.warnings = ''
@@ -59,6 +68,8 @@ class TMSOrder(models.Model):
                 if record.driver_id.active_tms_order_id != record:
                     print("warn",record,record.driver_id.active_tms_order_id,record)
                     record.warnings += "El conductor está asignado en otra orden (%s)\n" % record.driver_id.active_tms_order_id.name
+            if record.cpe_mismatch:
+                record.warnings += "Los datos de la CPE no coinciden con la orden\n"
                 
     @api.depends('customer_id')
     def _compute_contact_phone(self):
@@ -144,8 +155,20 @@ class TMSOrder(models.Model):
         if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids',]):
             print("sending order_changed",self.id,self.sale_id)
             self.env['bus.bus']._sendone('tms','order_changed',{'id':self.id,'order_id':self.sale_id.id})
-        if 'cpe_id' in vals and self.cpe_id:
-            self.cpe_id.action_update_cpe()
+        
+        if 'cpe_id' in vals:
+            if self.cpe_id:
+                updated = self.cpe_id.action_update_cpe()
+                if not updated:
+                    self.action_update_from_cpe()
+            elif self.cpe_mismatch:
+                self.cpe_mismatch=False
+                
+        if 'vehicle_id' in vals:
+            if self.cpe_mismatch and self.cpe_id:
+                # Vehicle changed after mismatch. Try again.
+                self.action_update_from_cpe()
+
         return ret
     
     
@@ -172,6 +195,36 @@ class TMSOrder(models.Model):
         for record in self:
             cpe = record.cpe_id
             old_stage = record.stage_id
+            
+            if cpe.transport_ids:
+                vehicle_id = cpe.transport_ids[0].vehicle_id
+                if record.vehicle_id and vehicle_id != record.vehicle_id:
+                    print("El vehiculo no coincide con la CPE",record.vehicle_id.name,vehicle_id.name)
+                    if not record.cpe_mismatch:
+                        record.cpe_mismatch = True
+                        message = _(
+                            "Vehicle from CPE %s mismatches the one in the order. The order was not updated.",
+                            Markup(
+                                f"""<a href=# data-oe-model=afip.cpe data-oe-id={record.cpe_id.id}"""
+                                f""">{record.cpe_id.name}</a>"""
+                            ),
+                        )
+                        self.with_user(SUPERUSER_ID).message_post(
+                            body=message,
+                            message_type='comment',
+                        )
+                    return False
+                record.cpe_mismatch = False    
+                record.vehicle_id = cpe.transport_ids[0].vehicle_id
+                record.date_start = cpe.transport_ids[0].start_date
+                record.distance = cpe.transport_ids[0].distance
+                if cpe.status == 'CN':
+                    record.stage_id = self.env.ref("tms.tms_stage_order_completed")
+                    record.end_trip = True
+                    record.date_end = cpe.status_date
+                elif cpe.status == 'AN':
+                    record.stage_id = self.env.ref("tms.tms_stage_order_cancelled")
+                    
             if cpe.customer_id:
                 record.customer_id = cpe.customer_id
                 record.sale_id.partner_invoice_id = cpe.customer_id
@@ -183,16 +236,7 @@ class TMSOrder(models.Model):
                 record.destination_id = cpe.destination_id
             if cpe.destination_locality_id:
                 record.destination_locality_id = cpe.destination_locality_id
-            if cpe.transport_ids:
-                record.vehicle_id = cpe.transport_ids[0].vehicle_id
-                record.date_start = cpe.transport_ids[0].start_date
-                record.distance = cpe.transport_ids[0].distance
-                if cpe.status == 'CN':
-                    record.stage_id = self.env.ref("tms.tms_stage_order_completed")
-                    record.end_trip = True
-                    record.date_end = cpe.status_date
-                elif cpe.status == 'AN':
-                    record.stage_id = self.env.ref("tms.tms_stage_order_cancelled")
+            
             if record.stage_id != old_stage and record.cpe_id:
                 message = _(
                     "Orden actualizada desde la carta de porte: %s",
@@ -206,6 +250,7 @@ class TMSOrder(models.Model):
     def button_end_order(self):
         super().button_end_order()
         self.stage_id = self.env.ref("tms.tms_stage_order_completed")
+        self.message_post(body=_("Order finished"))
         
     @api.model
     def assign_driver(self,order_id,driver_id):
@@ -214,6 +259,14 @@ class TMSOrder(models.Model):
         order.driver_id = int(driver_id)
         order._onchange_driver_id()
         print("Assigned driver %s to order %s" % (driver_id,order_id))
+        message = _(
+                    "Driver assigned: %s",
+                    Markup(
+                        f"""<a href=# data-oe-model=tms.driver data-oe-id={driver_id}"""
+                        f""">{order.driver_id.name}</a>"""
+                    ),
+                )
+        order.message_post(body=message)
         return order.id
     
     def _whatsapp_get_partner(self):

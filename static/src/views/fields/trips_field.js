@@ -45,6 +45,7 @@ export class TripsField extends Component {
     }
     getTrip(record) {
         var driver = record.data.driver_id ? record.data.driver_id[1] : false;
+        var cpe = record.data.cpe_id ? record.data.cpe_id[1] : false;
         var vehicle = record.data.vehicle_id ? record.data.vehicle_id[1] : false;
         var trailer = record.data.trailer_id ? record.data.trailer_id[1] : false;
         var stage_id = record.data.stage_id ? record.data.stage_id[0] : 0;
@@ -65,7 +66,7 @@ export class TripsField extends Component {
             stage: stage,
             running: running,
             warnings: record.data.warnings,
-
+            cpe: cpe,
         };
 
     }
@@ -122,6 +123,7 @@ export const tripsField = {
             { name: "stage_id", type: "many2one" },
             { name: "warnings", type: "char" },
             { name: "date_start", type: "date" },
+            { name: "cpe_id", type: "many2one" },
         ];
     },
 

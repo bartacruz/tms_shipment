@@ -13,9 +13,10 @@ class AfipCPE(models.Model):
             record.tms_has_order = len(order_id) > 0
     
     def action_update_cpe(self, force=False):
-         ret = super().action_update_cpe(force=force)
-         if ret and self.tms_order_id:
+        ret = super().action_update_cpe(force=force)
+        if ret and self.tms_order_id:
             self.tms_order_id.action_update_from_cpe()
+        return ret
     
     def action_view_tms_order(self):
         action = self.env["ir.actions.act_window"]._for_xml_id(

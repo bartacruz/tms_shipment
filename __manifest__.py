@@ -11,7 +11,7 @@ Truck shipment support for TMS
     'author': "Julio Santa Cruz",
     'website': "https://www.bartatech.com",
     'category': 'TMS',
-    "version": "17.0.1.0.5",
+    "version": "17.0.1.0.6",
     "license": "AGPL-3",
 
     'depends': ['base','tms','tms_sale','l10n_ar_afip_cpe','mail_gateway_whatsapp','purchase_stock'],

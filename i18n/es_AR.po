@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-23 20:39+0000\n"
-"PO-Revision-Date: 2026-02-23 20:39+0000\n"
+"POT-Creation-Date: 2026-02-25 17:24+0000\n"
+"PO-Revision-Date: 2026-02-25 17:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,13 @@ msgstr ""
 #: code:addons/tms_shipment/static/src/views/fields/trips_field.xml:0
 #, python-format
 msgid "(Asignar)"
-msgstr ""
+msgstr "(Asignar)"
+
+
+#. module: tms_shipment
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
+msgid "Warning: Vehicle from CPE mismatches the one in the order."
+msgstr "Alerta: La CPE no coincide con la orden."
 
 #. module: tms_shipment
 #. odoo-javascript
@@ -52,7 +58,7 @@ msgstr "<i class=\"fa fa-truck mx-2\" title=\"Camión\"/>"
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.fleet_vehicle_view_kanban_tms_shipment
 msgid "<i class=\"fa fa-user mx-2\" title=\"Driver\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user mx-2\" title=\"Conductor\"/>"
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.view_tms_driver_kanban_tms_shipment
@@ -83,11 +89,6 @@ msgstr "Viaje Activo"
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
 msgid "Activos"
-msgstr ""
-
-#. module: tms_shipment
-#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
-msgid "Actualizar viaje desde la Carta de Porte"
 msgstr ""
 
 #. module: tms_shipment
@@ -156,7 +157,6 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_afip_cpe
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__cpe_id
-#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
 msgid "Carta de Porte"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_driver_location__company_id
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: tms_shipment
 #: model:ir.ui.menu,name:tms_shipment.menu_tms_dash_drivers
@@ -199,6 +199,11 @@ msgstr "Contacto"
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__contact_phone
 msgid "Contact Phone"
 msgstr "Teléfono de Contacto"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__cpe_mismatch
+msgid "Cpe Mismatch"
+msgstr "CPE no coincide"
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
@@ -235,6 +240,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__partner_id
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__customer_id
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
 #, python-format
 msgid "Customer"
 msgstr "Cliente"
@@ -254,7 +260,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__destination
 #: model_terms:ir.ui.view,arch_db:tms_shipment.sale_order_trip_view_form
 msgid "Destination"
-msgstr "Ubicación de Destino"
+msgstr "Destino"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__destination_locality
@@ -281,6 +287,7 @@ msgstr ""
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__distance
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__distance
 msgid "Distance"
 msgstr "Distancia"
 
@@ -310,6 +317,13 @@ msgstr "Ubicaciones de Choferes"
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__driver_phone
 msgid "Driver Phone"
 msgstr "Teléfono del Chofer"
+
+#. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/tms_order.py:0
+#, python-format
+msgid "Driver assigned: %s"
+msgstr "Conductor asignado: %s"
 
 #. module: tms_shipment
 #. odoo-javascript
@@ -380,6 +394,11 @@ msgstr ""
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.tms_shipment_view_tms_order_search
 msgid "Group by"
+msgstr ""
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_tms_order__has_warnings
+msgid "Has Warnings"
 msgstr ""
 
 #. module: tms_shipment
@@ -492,6 +511,13 @@ msgid "Order Tag"
 msgstr ""
 
 #. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/tms_order.py:0
+#, python-format
+msgid "Order finished"
+msgstr "Orden Finalizada"
+
+#. module: tms_shipment
 #: model:ir.actions.act_window,name:tms_shipment.action_tms_dash_sale
 #: model:ir.ui.menu,name:tms_shipment.menu_tms_dash_sale
 msgid "Orders"
@@ -500,7 +526,7 @@ msgstr "Ordenes"
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__origin
 msgid "Origin"
-msgstr "Ubicación de Origen"
+msgstr "Origen"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_trip__origin_locality
@@ -581,13 +607,13 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__active_tms_order_stage_id
 msgid "Stage"
-msgstr ""
+msgstr "Etapa"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__destination_state_id
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__origin_state_id
 msgid "State"
-msgstr ""
+msgstr "Provincia"
 
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_tms_driver
@@ -617,7 +643,7 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_destination_id
 msgid "Tms Destination"
-msgstr "Ubicación de Destino"
+msgstr "Destino"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_destination_label
@@ -648,7 +674,7 @@ msgstr "Chofer"
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_afip_cpe__tms_has_order
 msgid "Tms Has Order"
-msgstr ""
+msgstr "Tiene ordenes"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_afip_cpe__tms_order_id
@@ -659,13 +685,23 @@ msgstr "Viaje"
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_afip_locality__tms_order_count
 msgid "Tms Order Count"
-msgstr ""
+msgstr "Cantidad de Ordenes"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_afip_locality__tms_order_destination_ids
+msgid "Tms Order Destination"
+msgstr "Destinos TMS"
+
+#. module: tms_shipment
+#: model:ir.model.fields,field_description:tms_shipment.field_afip_locality__tms_order_origin_ids
+msgid "Tms Order Origin"
+msgstr "Origenes TMS"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_origin_id
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order_line_trip__origin
 msgid "Tms Origin"
-msgstr "Ubicación Origen"
+msgstr "Origen"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_sale_order__tms_origin_label
@@ -714,11 +750,17 @@ msgstr "Etapa de Transporte"
 #. module: tms_shipment
 #. odoo-python
 #: code:addons/tms_shipment/models/sale_order.py:0
-#: code:addons/tms_shipment/models/sale_order.py:0
 #: code:addons/tms_shipment/models/tms_order.py:0
 #, python-format
 msgid "Transport Order"
 msgstr "Orden de Transporte"
+
+#. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/sale_order.py:0
+#, python-format
+msgid "Transport Order(s) Created: %s"
+msgstr "Ordenes de transporte creadas: %s"
 
 #. module: tms_shipment
 #: model:ir.actions.act_window,name:tms_shipment.action_view_trip_sale_order
@@ -779,13 +821,25 @@ msgstr ""
 #: model:ir.model,name:tms_shipment.model_fleet_vehicle
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__vehicle_id
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_driver__vehicle_ids
+#: model_terms:ir.ui.view,arch_db:tms_shipment.tms_order_view_form
 msgid "Vehicle"
 msgstr "Vehículo"
 
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__vehicle_label
 msgid "Vehicle Label"
+msgstr "Vehículo"
+
+#. module: tms_shipment
+#. odoo-python
+#: code:addons/tms_shipment/models/tms_order.py:0
+#, python-format
+msgid ""
+"Vehicle from CPE %s mismatches the one in the order. The order was not "
+"updated."
 msgstr ""
+"\"El Vehiculo de la CPE %s no coincide con el de la orden\". La orden no ha "
+"sido actualizada."
 
 #. module: tms_shipment
 #: model_terms:ir.ui.view,arch_db:tms_shipment.view_order_form_inherit_tms_shipment
@@ -795,7 +849,7 @@ msgstr ""
 #. module: tms_shipment
 #: model:ir.model.fields,field_description:tms_shipment.field_tms_order__warnings
 msgid "Warnings"
-msgstr ""
+msgstr "Alertas"
 
 #. module: tms_shipment
 #: model:ir.ui.menu,name:tms_shipment.menu_tms_config_afip_locality
@@ -810,7 +864,7 @@ msgstr "Provincias ARCA"
 #. module: tms_shipment
 #: model:ir.model,name:tms_shipment.model_afip_locality
 msgid "afip.locality"
-msgstr ""
+msgstr "Localidades ARCA"
 
 #. module: tms_shipment
 #. odoo-javascript

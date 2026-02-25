@@ -12,7 +12,6 @@
                         class="o_button_create_tms_sale btn-primary" string="Nuevo"
                         display="always" />
                 </header>
-
             </xpath>
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable">top</attribute>
@@ -91,10 +90,17 @@
         <field name="model">tms.order</field>
         <field name="inherit_id" ref="tms.tms_order_view_form" />
         <field name="arch" type="xml">
+            <header position="after">
+                <div class="alert alert-warning" role="alert" invisible="not cpe_mismatch" >Warning: Vehicle from CPE mismatches the one in the order.</div>
+            </header>
+            
             <field name="active" position="after" >
                 <field name="name" invisible="1"/>
                 <field name="route" invisible="1"/>
+                <field name="cpe_mismatch" invisible="1" />
+                <field name="cpe_id" invisible="1" />
             </field>
+
             <div class="oe_title" position="replace">
                 <div class="oe_title">
                         <label for="customer_id" class="oe_edit_only" string="Customer" />
@@ -103,7 +109,9 @@
                         </h1>
                     </div>
             </div>
+
             <field name="vehicle_id" position="replace" />
+            
             <field name="driver_id" position="replace">
                 <field name="contact_phone" widget="phone" />
                 <field name="origin_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}" domain="[('tms_location','=',True),('parent_id','=',customer_id)]" required="False"/>
@@ -122,8 +130,9 @@
                     <div class="d-flex">
                         <field name="vehicle_id" /><field name="trailer_id" />
                     </div>
-                    <field name="distance" />
                     <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="distance" />
+                    
                 </group>
             </xpath>
             <xpath expr="//page[@name='seats_page']" position="replace" />

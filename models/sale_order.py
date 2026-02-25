@@ -96,6 +96,7 @@ class SaleOrder(models.Model):
             'tms_destination_id':self.tms_destination_id and self.tms_destination_id.id,
             'tms_destination_locality_id':self.tms_destination_locality_id and self.tms_destination_locality_id.id,
             'tms_factor': self.tms_distance,
+            'tms_factor_uom': product_id.tms_factor_distance_uom.name,
             'order_id': self.id,
         }) 
         self._tms_generation()
