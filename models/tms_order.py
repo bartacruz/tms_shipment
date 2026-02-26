@@ -44,7 +44,6 @@ class TMSOrder(models.Model):
     cpe_mismatch = fields.Boolean()
     
     distance = fields.Integer()
-    
     delivered = fields.Integer()
     delivered_extra =fields.Integer()
     delivered_total = fields.Integer(compute='_compute_delivered', readonly=True)
@@ -153,14 +152,15 @@ class TMSOrder(models.Model):
             
             print("Stage change to ", vals["stage_id"], " actives: ", actives)
             if vals["stage_id"] in actives:
-                # TODO: add configurable option for auto-start
-                if not self.start_trip:
-                    print("starting trip")
-                    vals["start_trip"] = True
-                    vals["date_start"] = self.date_start or datetime.now()
+                # # TODO: add configurable option for auto-start
+                # if not self.start_trip:
+                #     print("starting trip")
+                #     vals["start_trip"] = True
+                #     vals["date_start"] = self.date_start or datetime.now()
                     vals["date_end"] = False
-                else:
-                    print("already started")
+                    vals["end_trip"] = False
+                # else:
+                #     print("already started")
             elif vals["stage_id"] == completed.id:
                 
                 # TODO: add configurable option for auto-end

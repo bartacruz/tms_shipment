@@ -119,6 +119,7 @@
                 <field name="destination_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}" domain="[('tms_location','=',True),('parent_id','=',False)]" required="False"/>
                 <field name="destination_locality_id" />
                 <field name="cpe_id" />
+                <field name="tag_ids" widget="many2many_tags"/>
             </field>
             <xpath expr="//group[@groups='!tms.group_tms_route']" position="replace" />
             <xpath expr="//group[@groups='tms.group_tms_route']" position="replace" />
@@ -127,14 +128,31 @@
                     <field name="driver_id"/>
                     <field name="driver_phone" widget="phone"/>
                     <label for="vehicle_id" string="Vehicle"/>
-                    <div class="d-flex">
-                        <field name="vehicle_id" /><field name="trailer_id" />
+                    <div class="d-flex w-50">
+                        <field name="vehicle_id" readonly="cpe_id" /><field name="trailer_id" />
                     </div>
-                    <field name="tag_ids" widget="many2many_tags"/>
-                    <field name="distance" />
-                    <field name="delivered" readonly="cpe_id"/>
-                    <field name="delivered_extra" />
-                    <field name="delivered_total" />
+                    
+                    <label for="distance"/>
+                    <div name="distance-val" class="d-flex w-25">
+                        <field name="distance" class="text-end"/>
+                        <span class="ms-1">Kms</span>
+                    </div>
+                    <label for="delivered"/>
+                    <div name="delivered-val" class="d-flex w-25">
+                        <field name="delivered" class="text-end"/>
+                        <span class="ms-1">Kg</span>
+                    </div>
+                    <label for="delivered_extra"/>
+                    <div name="delivered_extra-val" class="d-flex w-25">
+                        <field name="delivered_extra" class="text-end"/>
+                        <span class="ms-1">Kg</span>
+                    </div>
+                    <label for="delivered_total"/>
+                    <div name="delivered_total-val" class="d-flex w-25">
+                        <field name="delivered_total" class="text-end"/>
+                        <span class="ms-1">Kg</span>
+                    </div>
+                    
                     
                 </group>
             </xpath>

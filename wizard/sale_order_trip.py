@@ -42,13 +42,14 @@ class SaleOrderTrip(models.TransientModel):
     def create_sale_order(self):
         order_line = [
             (0, 0, {'product_id': self.product_id.id, 
-                    "product_uom_qty": 1,
+                    "product_uom_qty": self.distance,
                     "product_uom": self.product_id.uom_id.id,
                     'tms_origin_id':self.origin.id,
                     'tms_origin_locality_id':self.origin_locality.id,
                     'tms_destination_id':self.destination.id,
                     'tms_destination_locality_id':self.destination_locality.id,
-                    'tms_factor': self.distance
+                    'tms_factor': 1,
+                    'tms_factor_uom': 'T'
                     }
                 ) 
         ]

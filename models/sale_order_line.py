@@ -18,7 +18,9 @@ class SaleOrderLine(models.Model):
             stage = self.env.ref("tms.tms_stage_order_cancelled")
         else:
             stage = self.env.ref("tms.tms_stage_order_draft")
-        ret['stage_id']=stage.id
+        if self.tms_order_ids.stage_id != stage:
+            ret['stage_id']=stage.id
+        
         return ret
     
     def _check_required_fields(self):
