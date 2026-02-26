@@ -132,6 +132,9 @@
                     </div>
                     <field name="tag_ids" widget="many2many_tags"/>
                     <field name="distance" />
+                    <field name="delivered" readonly="cpe_id"/>
+                    <field name="delivered_extra" />
+                    <field name="delivered_total" />
                     
                 </group>
             </xpath>
@@ -166,7 +169,17 @@
         <field name="context">{'search_default_sale': 1, 'expand':1}</field>
 
     </record>
-
+    <record id="ir_action_server_action_update_from_cpe" model="ir.actions.server">
+        <field name="name">Update from CPE</field>
+        <field name="model_id" ref="tms.model_tms_order"/>
+        <field name="binding_model_id" ref="tms.model_tms_order"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[Command.link(ref('base.group_system'))]" />
+        <field name="state">code</field>
+        <field name="code">
+            action = record.action_update_from_cpe()
+        </field>
+    </record>
     <!-- <record id="tms_order_driver_graph" model="ir.ui.view">
         <field name="name">tms.order.driver.graph</field>
         <field name="model">tms.order</field>

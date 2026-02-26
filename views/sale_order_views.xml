@@ -131,7 +131,7 @@
     <record id="view_order_form_inherit_tms_shipment" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.tms_shipment</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="inherit_id" ref="tms_sale.sale_order_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_order']" position="after">
                 <field name="commitment_date"/>
@@ -148,6 +148,18 @@
                     <field name="tms_order_ids" mode="tree" />
                 </page>
             </xpath>
+            <xpath expr="//field[@name='tms_factor']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tms_factor_uom']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <field name="pricelist_id" position="attributes">
+                <attribute name="readonly">state in ['cancel']</attribute>
+            </field>
+            <button name="action_update_prices" position="attributes">
+                <attribute name="invisible">not show_update_pricelist or state in ['cancel']</attribute>
+            </button>
         </field>
     </record>
 

@@ -5,6 +5,7 @@ from random import randint
 from datetime import datetime, timedelta
 from odoo import _, api, fields, models, SUPERUSER_ID
 from markupsafe import Markup
+
 class TMSOrderTag(models.Model):
     _name = "tms.order.tag"
     _description = "Order Tag"
@@ -44,6 +45,10 @@ class TMSOrder(models.Model):
     
     distance = fields.Integer()
     
+    delivered = fields.Integer()
+    delivered_extra =fields.Integer()
+    delivered_total = fields.Integer(compute='_compute_delivered', readonly=True)
+    
     warnings = fields.Char(compute="_compute_warnings")
     has_warnings = fields.Boolean(compute="_compute_has_warnings", store=True,readonly=True)
     
@@ -52,6 +57,12 @@ class TMSOrder(models.Model):
         print("_expand_", records,domain,order)
         return records[::-1]
     
+    @api.depends('delivered','delivered_extra','cpe_id')
+    def _compute_delivered(self):
+        for record in self:
+            record.delivered_total = record.delivered + record.delivered_extra
+            print("delivered",record,record.delivered_total)
+            
     @api.depends('driver_id','is_active','cpe_mismatch', 'vehicle_id')
     def _compute_has_warnings(self):
         for record in self:
@@ -124,12 +135,21 @@ class TMSOrder(models.Model):
     #         if record.cpe_id and not record.cpe_id.origin_partner_id:
     #             record.cpe_id.origin_partner_id = self.customer_id
     
+    def update_sale_line(self):
+        for record in self:
+            delivered = record.delivered_total / 1000 # kg to tons
+            delivered = delivered or 1 # fixed price
+            print("redelivered on write",delivered)
+            record.sale_line_id.tms_factor = delivered
+            record.sale_line_id.product_uom_qty = record.distance
+            record.sale_line_id.qty_delivered = record.distance
+            
     @api.model
     def write(self, vals):
-        
+        completed = self.env.ref("tms.tms_stage_order_completed")
         if "stage_id" in vals:
             actives = self.env["tms.stage"].search([("is_active", "=", True)]).ids
-            completed = self.env.ref("tms.tms_stage_order_completed")
+            
             
             print("Stage change to ", vals["stage_id"], " actives: ", actives)
             if vals["stage_id"] in actives:
@@ -142,6 +162,7 @@ class TMSOrder(models.Model):
                 else:
                     print("already started")
             elif vals["stage_id"] == completed.id:
+                
                 # TODO: add configurable option for auto-end
                 if not self.end_trip:
                     print("ending completed trip")
@@ -152,7 +173,7 @@ class TMSOrder(models.Model):
                     
         ret = super().write(vals)
         self.sale_id._compute_tms_active()
-        if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids',]):
+        if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids','cpe_id','warnings']):
             print("sending order_changed",self.id,self.sale_id)
             self.env['bus.bus']._sendone('tms','order_changed',{'id':self.id,'order_id':self.sale_id.id})
         
@@ -168,6 +189,9 @@ class TMSOrder(models.Model):
             if self.cpe_mismatch and self.cpe_id:
                 # Vehicle changed after mismatch. Try again.
                 self.action_update_from_cpe()
+        
+        if any(x in vals for x in ['delivered','delivered_extra','distance']):
+            self.update_sale_line()
 
         return ret
     
@@ -218,6 +242,9 @@ class TMSOrder(models.Model):
                 record.vehicle_id = cpe.transport_ids[0].vehicle_id
                 record.date_start = cpe.transport_ids[0].start_date
                 record.distance = cpe.transport_ids[0].distance
+                
+                record.delivered = cpe.unload_net
+                
                 if cpe.status == 'CN':
                     record.stage_id = self.env.ref("tms.tms_stage_order_completed")
                     record.end_trip = True

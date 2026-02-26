@@ -139,3 +139,42 @@ class SaleOrder(models.Model):
         action['context']={"default_origin":self.tms_origin_id}
         print("ACTION",action)
         return action
+    
+    def _tms_generate_line_tms_orders(self, new_tms_sol):
+        """
+        Generate TMS Orders for the given sale order lines.
+
+        Override this method to filter lines to generate TMS Orders for.
+        """
+        self.ensure_one()
+        new_tms_orders = self.env["tms.order"]
+
+        for line in new_tms_sol:
+            if len(line.tms_order_ids) < 1:
+                vals = line._prepare_line_tms_values(line)
+                tms_by_line = self.env["tms.order"].sudo().create(vals)
+                line.write({"tms_order_ids": [(4, tms_by_line.id)]})
+                new_tms_orders |= tms_by_line
+
+        return new_tms_orders
+
+    def _tms_generate(self):
+        self.ensure_one()
+        new_tms_orders = self.env["tms.order"]
+
+        new_tms_line_sol = self.order_line.filtered(
+            lambda L: L.product_id.trip_product_type == "trip"
+            and len(L.tms_order_ids) < 1
+        )
+        new_tms_orders |= self._tms_generate_line_tms_orders(new_tms_line_sol)
+
+        return new_tms_orders
+    
+    def write(self, values):
+        pricelist_updated = False
+        if 'pricelist_id' in values and self.state == 'sale':
+            pricelist_updated = True
+            self.state = 'sent'
+        ret = super().write(values)
+        if pricelist_updated:
+            self.state = 'sale'
