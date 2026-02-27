@@ -12,9 +12,7 @@ class SaleOrderLine(models.Model):
         ret['origin_locality_id'] = self.tms_origin_locality_id.id or None
         ret['destination_locality_id'] = self.tms_destination_locality_id.id or None
         
-        if self.order_id.state == "sale":
-            stage = self.env.ref("tms.tms_stage_order_confirmed")
-        elif self.state == "cancel":
+        if self.state == "cancel":
             stage = self.env.ref("tms.tms_stage_order_cancelled")
         else:
             stage = self.env.ref("tms.tms_stage_order_draft")

@@ -300,3 +300,21 @@ class TMSOrder(models.Model):
         if "customer_id" in self._fields:
             return self.customer_id
         return super()._whatsapp_get_partner()
+    
+    def action_send_whatsapp_request(self):
+        gateway_id = self.env['mail.gateway'].browse(1)
+        template = self.env['mail.whatsapp.template'].browse(12)
+        partner = self.driver_id
+        partner = self.env['res.partner'].browse(4185) # YO
+        number_field_name = partner.mobile and 'mobile' or 'phone'
+        body = template.with_context({'default_res_id':self.id}).render_body_message()
+        print("body:",body)
+        
+        channel = partner._whatsapp_get_channel(number_field_name, gateway_id)
+        message = channel.with_context(whatsapp_template_id=template.id,default_res_id=self.id).message_post(
+            body=body, subtype_xmlid="mail.mt_comment", message_type="comment")
+        print("message sent",message)
+        
+        
+        
+        

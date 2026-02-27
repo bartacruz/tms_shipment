@@ -157,6 +157,9 @@
                 </group>
             </xpath>
             <xpath expr="//page[@name='seats_page']" position="replace" />
+            <button name="button_start_order" position="after">
+                <button type="object" name="action_send_whatsapp_request">Send WA</button>
+            </button>
         </field>
     </record>
 
