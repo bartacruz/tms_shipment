@@ -17,13 +17,14 @@ class MailMessage(models.Model):
             _logger.warning('WA write: el mensaje es %s',template_message)
             tms_order = template_message.tms_order_id
             _logger.warning('WA write: la orden es %s',tms_order)
-            if self.body.find("Confirmar"):
+            #tms_order.message_post(**self._get_gateway_thread_message_vals())
+            if "Confirmar" in self.body:
                 tms_order.driver_rejected=False
                 tms_order.stage_id = self.env.ref("tms.tms_stage_order_confirmed")
                 body = 'Confirmación recibida.\nNos estaremos contactando para mas detalles.'
             else:
+                tms_order.driver_rejected=True
                 if tms_order.is_active:
-                    tms_order.driver_rejected=True
                     tms_order.stage_id = self.env.ref("tms.tms_stage_order_draft")
                 body = 'Cancelación recibida.'
             tms_order._send_whatsapp(self.author_id,body=body)

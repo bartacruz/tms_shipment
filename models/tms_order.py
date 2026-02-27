@@ -312,7 +312,7 @@ class TMSOrder(models.Model):
         gateway_id = self.env['mail.gateway'].browse(gateway)
         context = {'default_res_id':self.id}
         if template_id:
-            context['whatsapp_template_id'] = template.id
+            context['whatsapp_template_id'] = template_id
             template = self.env['mail.whatsapp.template'].browse(template_id)    
             body = template.with_context(context).render_body_message()
             

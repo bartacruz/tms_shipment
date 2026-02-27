@@ -54,7 +54,7 @@
             <xpath expr="//button[@name='button_end_order']" position="after">
                 <field name="description" optional="hide" />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
-                <button name="action_open_record_form" type="object" icon="fa-external-link" string="Open" />
+                <button name="action_open_record_form" type="object" string="Open" />
 
             </xpath>
         </field>
@@ -125,10 +125,22 @@
             <xpath expr="//group[@groups='tms.group_tms_route']" position="replace" />
             <xpath expr="//group//group" position="after" >
                 <group>
-                    <field name="driver_id"/>
-                    <field name="driver_phone" widget="phone"/>
+                    <label for="driver_id"/>
+                    <div class="mb-1">
+                        <field name="driver_id"/>    
+                        <field name="driver_phone" widget="phone"/>
+                        <button 
+                            type="object" 
+                            name="action_send_whatsapp_request" 
+                            class="btn btn-sm btn-warning text-nowrap mx-auto" 
+                            icon="fa-whatsapp"
+                            invisible="not driver_phone or stage_id > 1 ">
+                                Pedir Confirmación
+                        </button>
+                    </div>
+                    
                     <label for="vehicle_id" string="Vehicle"/>
-                    <div class="d-flex w-50">
+                    <div class="d-flex w-75">
                         <field name="vehicle_id" readonly="cpe_id" /><field name="trailer_id" />
                     </div>
                     
@@ -157,11 +169,19 @@
                 </group>
             </xpath>
             <xpath expr="//page[@name='seats_page']" position="replace" />
-            <button name="button_start_order" position="after">
-                <button type="object" name="action_send_whatsapp_request">Send WA</button>
-            </button>
+            
         </field>
     </record>
+
+    <record id="tms_order_account_view_form" model="ir.ui.view">
+        <field name="name">tms.order.view.form.inherit.tms_shipment</field>
+        <field name="model">tms.order</field>
+        <field name="inherit_id" ref="tms_account.view_tms_order_form_inherit_account" />
+        <field name="arch" type="xml">
+            <field name="create_invoice" position="replace"/>
+        </field>
+    </record>
+
 
     <record id="tms_order_view_kanban" model="ir.ui.view">
         <field name="name">tms.order.view.kanban.inherit.tms_shipment</field>
