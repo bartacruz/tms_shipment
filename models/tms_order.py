@@ -5,7 +5,9 @@ from random import randint
 from datetime import datetime, timedelta
 from odoo import _, api, fields, models, SUPERUSER_ID
 from markupsafe import Markup
+import logging
 
+_logger = logging.getLogger(__name__)
 class TMSOrderTag(models.Model):
     _name = "tms.order.tag"
     _description = "Order Tag"
@@ -51,6 +53,8 @@ class TMSOrder(models.Model):
     warnings = fields.Char(compute="_compute_warnings")
     has_warnings = fields.Boolean(compute="_compute_has_warnings", store=True,readonly=True)
     
+    driver_rejected = fields.Boolean()
+    
     @api.model
     def _sale_id_expand_groups(self, records, domain, order):
         print("_expand_", records,domain,order)
@@ -80,6 +84,8 @@ class TMSOrder(models.Model):
                     record.warnings += "El conductor está asignado en otra orden (%s)\n" % record.driver_id.active_tms_order_id.name
             if record.cpe_mismatch:
                 record.warnings += "Los datos de la CPE no coinciden con la orden\n"
+            if record.driver_rejected and record.driver_id:
+                record.warnings += "El conductor rechazó la orden\n"
                 
     @api.depends('customer_id')
     def _compute_contact_phone(self):
@@ -127,6 +133,7 @@ class TMSOrder(models.Model):
     def _onchange_driver_id(self):
         print("onchange driver",self.driver_id.vehicle_id)
         self.vehicle_id = self.driver_id.vehicle_id
+        self.driver_rejected = False
     
     # @api.onchange('cpe_id')
     # def _onchange_cpe(self):
@@ -294,27 +301,45 @@ class TMSOrder(models.Model):
                     ),
                 )
         order.message_post(body=message)
+        order.driver_rejected=False
         return order.id
     
     def _whatsapp_get_partner(self):
         if "customer_id" in self._fields:
             return self.customer_id
         return super()._whatsapp_get_partner()
-    
-    def action_send_whatsapp_request(self):
-        gateway_id = self.env['mail.gateway'].browse(1)
-        template = self.env['mail.whatsapp.template'].browse(12)
-        partner = self.driver_id
-        partner = self.env['res.partner'].browse(4185) # YO
-        number_field_name = partner.mobile and 'mobile' or 'phone'
-        body = template.with_context({'default_res_id':self.id}).render_body_message()
-        print("body:",body)
-        
-        channel = partner._whatsapp_get_channel(number_field_name, gateway_id)
-        message = channel.with_context(whatsapp_template_id=template.id,default_res_id=self.id).message_post(
+    def _send_whatsapp(self,partner_id,body=False,template_id=False,gateway=1):
+        gateway_id = self.env['mail.gateway'].browse(gateway)
+        context = {'default_res_id':self.id}
+        if template_id:
+            context['whatsapp_template_id'] = template.id
+            template = self.env['mail.whatsapp.template'].browse(template_id)    
+            body = template.with_context(context).render_body_message()
+            
+        number_field_name = partner_id.mobile and 'mobile' or 'phone'
+        channel = partner_id._whatsapp_get_channel(number_field_name, gateway_id)
+        message = channel.with_context(context).message_post(
             body=body, subtype_xmlid="mail.mt_comment", message_type="comment")
-        print("message sent",message)
+        message.tms_order_id = self.id
+        _logger.info("WA %s sent to %s:  %s",self.name,partner_id.name,message)
+            
+    def action_send_whatsapp_request(self):
         
         
+        partner = self.driver_id
+        #partner = self.env['res.partner'].browse(4185) # YO
+        self._send_whatsapp(partner,template_id=12)
+        
+        # gateway_id = self.env['mail.gateway'].browse(1)
+        # template = self.env['mail.whatsapp.template'].browse(12)
+        # number_field_name = partner.mobile and 'mobile' or 'phone'
+        # body = template.with_context({'default_res_id':self.id}).render_body_message()
+        # print("body:",body)
+        
+        # channel = partner._whatsapp_get_channel(number_field_name, gateway_id)
+        # message = channel.with_context(whatsapp_template_id=template.id,default_res_id=self.id).message_post(
+        #     body=body, subtype_xmlid="mail.mt_comment", message_type="comment")
+        # message.tms_order_id = self.id
+        # print("message sent",message)
         
         
