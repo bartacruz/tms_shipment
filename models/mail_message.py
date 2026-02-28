@@ -57,13 +57,11 @@ class MailMessage(models.Model):
                 _logger.warning("Received CPE #%s from %s but there's no active order to attach to.",qr.code,self.author_id)
                 return
             print("Es CPE y la orden está activa!",qr.code,order)
+            _logger.warning("CPE %s de orden activa %s. att=%s",qr.code,order,self.attachment_ids)
             order.message_post(
                 author_id=self.author_id.id,
                 body=f'{self.body}\n\nQR Code: {qr.code}',
-                gateway_type=self.gateway_type,
                 date=self.date,
-                subtype_xmlid="mail.mt_comment",
-                message_type="comment",
                 attachment_ids=self.attachment_ids.ids,
                 gateway_notifications=[],  # Avoid sending notifications
             )
@@ -89,10 +87,10 @@ class MailMessage(models.Model):
                         f""">{cpe.name}</a>"""
                     ),
                 )                
-                order.sudo().message_post(body=message1)
+                order.with_user(SUPERUSER_ID).message_post(body=message1)
 
                 message2 = Markup(f'<p>La carta de porte {qr.code} ha sido recibida y asignada al viaje {order.name}.<br/>Muchas gracias.</p>')
-                self.sudo().env[self.model].browse(self.res_id).message_post(author_id=SUPERUSER_ID,body=message2, gateway_notifications=[],subtype_xmlid="mail.mt_comment",
+                self.with_user(SUPERUSER_ID).env[self.model].browse(self.res_id).message_post(author_id=SUPERUSER_ID,body=message2, gateway_notifications=[],subtype_xmlid="mail.mt_comment",
                 message_type="comment",)
                 
     @api.depends('attachment_ids')
@@ -114,7 +112,7 @@ class MailMessage(models.Model):
             _logger.warning('WA write: el mensaje es %s',template_message)
             tms_order = template_message.tms_order_id
             _logger.warning('WA write: la orden es %s',tms_order)
-            #tms_order.message_post(**self._get_gateway_thread_message_vals())
+            tms_order.message_post(**self._get_gateway_thread_message_vals())
             if "Confirmar" in self.body:
                 tms_order.driver_rejected=False
                 tms_order.stage_id = self.env.ref("tms.tms_stage_order_confirmed")

@@ -20,8 +20,8 @@ class TMSOrderTag(models.Model):
     sequence = fields.Integer('Sequence', default=0)
     color = fields.Integer(
         string='Color Index', default=lambda self: self._default_color(),
-        help='Tag color. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags.')
-
+        help='Tag color. No color means no display in kanban or front-end, to distinguish internal tags from public categorization tags.'
+    )
 
 class TMSOrder(models.Model):
     _inherit = "tms.order"
@@ -271,15 +271,15 @@ class TMSOrder(models.Model):
             if cpe.destination_locality_id:
                 record.destination_locality_id = cpe.destination_locality_id
             
-            if record.stage_id != old_stage and record.cpe_id:
-                message = _(
-                    "Orden actualizada desde la carta de porte: %s",
-                    Markup(
-                        f"""<a href=# data-oe-model=afip.cpe data-oe-id={record.cpe_id.id}"""
-                        f""">{record.cpe_id.name}</a>"""
-                    ),
-                )
-                self.message_post(body=message)
+            # if record.stage_id != old_stage and record.cpe_id:
+            message = _(
+                "Orden actualizada desde la carta de porte: %s",
+                Markup(
+                    f"""<a href=# data-oe-model=afip.cpe data-oe-id={record.cpe_id.id}"""
+                    f""">{record.cpe_id.name}</a>"""
+                ),
+            )
+            self.message_post(body=message)
     
     def button_end_order(self):
         super().button_end_order()
@@ -294,12 +294,12 @@ class TMSOrder(models.Model):
         order._onchange_driver_id()
         print("Assigned driver %s to order %s" % (driver_id,order_id))
         message = _(
-                    "Driver assigned: %s",
-                    Markup(
-                        f"""<a href=# data-oe-model=tms.driver data-oe-id={driver_id}"""
-                        f""">{order.driver_id.name}</a>"""
-                    ),
-                )
+            "Driver assigned: %s",
+            Markup(
+                f"""<a href=# data-oe-model=tms.driver data-oe-id={driver_id}"""
+                f""">{order.driver_id.name}</a>"""
+            ),
+        )
         order.message_post(body=message)
         order.driver_rejected=False
         return order.id
@@ -328,4 +328,4 @@ class TMSOrder(models.Model):
         partner = self.driver_id
         #partner = self.env['res.partner'].browse(4185) # YO
         self._send_whatsapp(partner,template_id=12)
-        
+
