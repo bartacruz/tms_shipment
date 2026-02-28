@@ -68,7 +68,7 @@ class MailMessage(models.Model):
                 gateway_notifications=[],  # Avoid sending notifications
             )
             if not order.cpe_id:
-                cpe = self.env['afip.cpe'].search([ '|',('ctg_number','=',qr.code),('name','=',qr.code) ])
+                cpe = self.env['afip.cpe'].search([ '|',('ctg_number','=',qr.code),('name','=',qr.code) ],limit=1)
                 print("Cpe: ",cpe)
                 if not cpe:
                     print("Creando CPE",qr.code)
