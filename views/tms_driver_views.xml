@@ -44,6 +44,7 @@
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="vehicle_id" />
                 <field name="trailer_id" readonly="True"/>
+                <field name="partner_id" invisible="active_model == 'res.partner'"/>
             </xpath>
             <xpath expr="//field[@name='is_training']" position="replace"/>
         </field>

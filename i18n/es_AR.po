@@ -852,7 +852,7 @@ msgid ""
 "Vehicle from CPE %s mismatches the one in the order. The order was not "
 "updated."
 msgstr ""
-"\"El Vehiculo de la CPE %s no coincide con el de la orden\". La orden no ha "
+"El Vehiculo de la CPE %s no coincide con el de la orden. La orden no ha "
 "sido actualizada."
 
 #. module: tms_shipment
