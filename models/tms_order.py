@@ -143,12 +143,54 @@ class TMSOrder(models.Model):
     
     def update_sale_line(self):
         for record in self:
-            delivered = record.delivered_total / 1000 # kg to tons
-            delivered = delivered or 1 # fixed price
-            print("redelivered on write",delivered)
-            record.sale_line_id.tms_factor = delivered
-            record.sale_line_id.product_uom_qty = record.distance
-            record.sale_line_id.qty_delivered = record.distance
+            delivered = record.delivered_total
+            print("update_sale_line",record,delivered)
+            
+            # On tms.order, distances are in Km and weight in kg.
+            # We need to convert them to the Uom of the sale.line fields.
+            
+            
+            product_id = record.sale_line_id.product_id
+            distance_uom = self.env.ref('uom.uom_categ_length')
+            weight_uom = self.env.ref('uom.product_uom_categ_kgm')
+            units_uom = self.env.ref('uom.product_uom_categ_unit')
+            
+            kg_uom = self.env.ref('uom.product_uom_kgm')
+            km_uom = self.env.ref('uom.product_uom_km')
+            if product_id.tms_factor_type == 'weight':
+                record.sale_line_id.tms_factor = kg_uom._compute_quantity(delivered,product_id.tms_factor_weight_uom)
+                record.sale_line_id.tms_factor_uom = product_id.tms_factor_weight_uom.name
+                 
+            elif product_id.tms_factor_type == 'distance':
+                record.sale_line_id.tms_factor = km_uom._compute_quantity(record.distance,product_id.tms_factor_distance_uom)
+                record.sale_line_id.tms_factor_uom = product_id.tms_factor_distance_uom.name
+            
+            if product_id.uom_id.category_id == weight_uom:
+                if delivered > 1:
+                    record.sale_line_id.product_uom_qty = kg_uom._compute_quantity(delivered,product_id.uom_id)
+                    print("updated product_uom_qty",delivered,record.sale_line_id.product_uom_qty)
+                record.sale_line_id.qty_delivered = kg_uom._compute_quantity(delivered,product_id.uom_id)
+                record.sale_line_id.product_uom = product_id.uom_id
+            elif product_id.uom_id.category_id == distance_uom:
+                record.sale_line_id.qty_delivered = km_uom._compute_quantity(record.distance,product_id.uom_id)
+                record.sale_line_id.product_uom = product_id.uom_id
+            elif product_id.uom_id.category_id == units_uom:
+                record.sale_line_id.qty_delivered = (record.distance and delivered) and 1 or 0
+                record.sale_line_id.product_uom = product_id.uom_id
+            
+            record.sale_line_id.name = f'Viaje {record.name} {record.origin_locality_id.name} a {record.destination_locality_id.name}' 
+            if record.driver_id:
+                    record.sale_line_id.name += f' Transportista: {record.driver_id.name}'
+            if record.is_completed:
+                # Fill the order line with trip data.
+                if record.distance > 1:
+                    record.sale_line_id.name += f' Distancia:{record.distance} km'
+                if delivered > 1:
+                    record.sale_line_id.name += f' Descarga neta: {delivered} kg'
+                if record.sale_id.pricelist_id:
+                    record.sale_line_id.name += f' Lista de Precio: {record.sale_id.pricelist_id.name}'
+                if record.cpe_id:
+                    record.sale_line_id.name += f' CTG: {record.cpe_id.ctg_number}'
             
     @api.model
     def write(self, vals):
@@ -197,7 +239,7 @@ class TMSOrder(models.Model):
                 # Vehicle changed after mismatch. Try again.
                 self.action_update_from_cpe()
         
-        if any(x in vals for x in ['delivered','delivered_extra','distance']):
+        if any(x in vals for x in ['delivered','delivered_extra','distance','driver_id','origin_locality_id','destination_locality_id']):
             self.update_sale_line()
 
         return ret
@@ -230,7 +272,13 @@ class TMSOrder(models.Model):
             if cpe.transport_ids:
                 vehicle_id = cpe.transport_ids[0].vehicle_id
                 if record.vehicle_id and vehicle_id != record.vehicle_id:
-                    print("El vehiculo no coincide con la CPE",record.vehicle_id.name,vehicle_id.name)
+                    _logger.warning("CPE %s: Vehicle mismatch: %s (%s) != %s (%s) ",
+                        record,
+                        record.vehicle_id, 
+                        record.vehicle_id.name,
+                        vehicle_id,
+                        vehicle_id.name
+                    )
                     if not record.cpe_mismatch:
                         record.cpe_mismatch = True
                         message = _(
@@ -245,7 +293,7 @@ class TMSOrder(models.Model):
                             message_type='comment',
                         )
                     return False
-                record.cpe_mismatch = False    
+                record.cpe_mismatch = False
                 record.vehicle_id = cpe.transport_ids[0].vehicle_id
                 record.date_start = cpe.transport_ids[0].start_date
                 record.distance = cpe.transport_ids[0].distance

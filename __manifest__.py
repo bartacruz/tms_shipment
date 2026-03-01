@@ -30,6 +30,8 @@ Truck shipment support for TMS
             "tms_shipment/static/src/views/fields/tms_service.js",
             "tms_shipment/static/src/views/fields/trips_field.js",
             "tms_shipment/static/src/views/fields/trips_field.xml",
+            "tms_shipment/static/src/js/dynamic_m2o_field.js",
+            # "tms_shipment/static/src/xml/dynamic_m2o_field.xml",
             
         ],
     },
@@ -38,6 +40,7 @@ Truck shipment support for TMS
         'views/afip_cpe.xml',
         'views/fleet_vehicle.xml',
         'views/tms_driver_views.xml',
+        'views/product_pricelist.xml',
         'views/res_partner_views.xml',
         'views/sale_order_views.xml',
         'views/tms_driver_location_views.xml',
