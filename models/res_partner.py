@@ -9,18 +9,16 @@ class ResPartner(models.Model):
     alias_name = fields.Char(_('Alias'))
     tms_driver_ids = fields.One2many('tms.driver','partner_id')
     tms_driver_id = fields.Many2one('tms.driver', compute='_compute_tms_driver_id', readonly=True)
-    
-    
+
 
     @api.depends('alias_name')
     @api.depends_context('show_alias')
     def _compute_display_name(self):
         super()._compute_display_name()
-        if not self._context.get('show_alias'):
-            return
         for record in self:
             if record.alias_name:
-                record.display_name = "["+record.alias_name+"] " + record.display_name 
+                if record.env.context.get('show_alias'):
+                    record.display_name = "["+record.alias_name+"] " + record.display_name
     
     @api.depends('tms_driver_ids')
     def _compute_tms_driver_id(self):

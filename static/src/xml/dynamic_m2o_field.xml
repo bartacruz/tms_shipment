@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="tms_shipment.DynamicM2OField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
+        <!-- MODO EDICIÓN (Formulario) -->
+        <xpath expr="//div[contains(@class, 'o_field_many2one_selection')]" position="inside">
+            <a t-if="customFieldValue" t-att-href="customFieldHref"
+               class="o_form_uri ms-2 fw-normal text-muted small" style="text-decoration: none;">
+                <t t-esc="customFieldValue"/>
+            </a>
+        </xpath>
+
+        <!-- MODO READONLY / LISTA / KANBAN -->
+        <!-- Buscamos el enlace principal del registro para poner el nuestro al lado -->
+        <xpath expr="//a[contains(@class, 'o_form_uri') or contains(@class, 'o_external_link')]" position="after">
+            <a t-if="props.readonly and customFieldValue" 
+               t-att-href="customFieldHref"
+               class="o_form_uri ms-1 fw-normal text-muted small" 
+               style="text-decoration: none;">
+                <span class="me-1">|</span>
+                <t t-esc="customFieldValue"/>
+            </a>
+        </xpath>
+    </t>
+</templates>
