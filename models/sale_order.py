@@ -170,11 +170,11 @@ class SaleOrder(models.Model):
 
         return new_tms_orders
     
-    def write(self, values):
-        pricelist_updated = False
-        if 'pricelist_id' in values and self.state == 'sale':
-            pricelist_updated = True
-            self.state = 'sent'
-        ret = super().write(values)
-        if pricelist_updated:
-            self.state = 'sale'
+    # def write(self, values):
+    #     pricelist_updated = False
+    #     if 'pricelist_id' in values and self.state == 'sale':
+    #         pricelist_updated = True
+    #         self.state = 'sent'
+    #     ret = super().write(values)
+    #     if pricelist_updated:
+    #         self.state = 'sale'

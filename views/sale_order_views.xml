@@ -94,6 +94,7 @@
                 <field name="tms_origin_id" />
                 <field name="tms_destination_id" />
                 <filter string="My Orders" domain="[('user_id', '=', uid)]" name="my_tms_sale_orders_filter"/>
+                
                 <group name="sale_dates" string="Fecha">
                     <filter string="Hoy" name="filter_today_creation"
                         domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]" />
@@ -138,7 +139,7 @@
             <xpath expr="//field[@name='date_order']" position="after">
                 <field name="commitment_date"/>
             </xpath>
-            <xpath expr="//page[@name='order_lines']" position="before">
+            <xpath expr="//page[@name='order_lines']" position="before" invisible="not tms_order_ids">
                 <page string="Viajes" name="tms_orders">
                     <group>
                         <group>
@@ -154,12 +155,6 @@
                     <field name="tms_order_ids" mode="tree" />
                 </page>
             </xpath>
-            <field name="pricelist_id" position="attributes">
-                <attribute name="readonly">state in ['cancel']</attribute>
-            </field>
-            <button name="action_update_prices" position="attributes">
-                <attribute name="invisible">not show_update_pricelist or state in ['cancel']</attribute>
-            </button>
         </field>
     </record>
 

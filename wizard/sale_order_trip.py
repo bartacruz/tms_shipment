@@ -56,7 +56,7 @@ class SaleOrderTrip(models.TransientModel):
         vals_list = [{
             "partner_id": self.partner_id.id,
             "commitment_date": self.commitment_date,
-            "state": "sale",
+            "state": "sent",
             'tms_origin_locality_id':self.origin_locality.id,
             'tms_destination_locality_id':self.destination_locality.id,
             "tms_distance": self.distance,
