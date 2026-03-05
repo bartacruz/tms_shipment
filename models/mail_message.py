@@ -13,6 +13,22 @@ class IrAttachment(models.Model):
     qr_codes = fields.One2many('qr.code','attachment_id')
     qr_scanned = fields.Boolean()
     
+    def _prepare_qr_vals(self):
+        vals = []
+        for record in self:
+            print("_prepare_qr_vals",record)
+            
+            if 'image' in record.mimetype:
+                image = Image.open(io.BytesIO(base64.b64decode(record.datas)))
+                decoded = decode(image)
+                print("decoded",decoded)
+                for r in decoded:
+                    vals.append({
+                        'attachment_id': record.id,
+                        'code':r.data.decode('utf-8'),
+                        'qr_type':r.type
+                    })
+        return vals
     
     def _extract_qr_codes(self):
         for record in self:
@@ -34,7 +50,8 @@ class IrAttachment(models.Model):
 class MailMessage(models.Model):
     _inherit = 'mail.message'
     
-    qr_codes = fields.Many2many('qr.code', compute="_compute_qr_codes", store=True)
+    qr_code_ids = fields.One2many('qr.code', 'message_id')
+    qr_codes_count = fields.Integer(compute="_compute_qr_codes", store=True)
     tms_order_id = fields.Many2one('tms.order',_('Related TMS Order'))
     
     def _process_qr_code(self,qr):
@@ -96,13 +113,27 @@ class MailMessage(models.Model):
     @api.depends('attachment_ids')
     def _compute_qr_codes(self):
         for record in self:
-            print("_compute_qr_codes",record)
             for a in record.attachment_ids:
                 if not a.qr_scanned:
-                    a._extract_qr_codes()
-                    for q in a.qr_codes:
-                        record.sudo()._process_qr_code(q)
-                record.qr_codes |= a.qr_codes
+                    vals_list = a._prepare_qr_vals()
+                    for vals in vals_list:
+                        existing = record.qr_code_ids.filtered(lambda q: q.code == vals['code'])
+                        if not existing:
+                            _logger.info('Processing QR %s for attachment %s of message %s',
+                                         vals['code'],
+                                         a.id,
+                                         record.id)
+                            vals['message_id']=record.id
+                            qr = record.qr_code_ids.create(vals)
+                            record.sudo()._process_qr_code(qr)
+                        else:
+                            _logger.info('NOT Processing QR %s for attachment %s of message %s. Already scanned on attachment %s',
+                                         vals['code'],
+                                         a.id,
+                                         record.id,
+                                         existing.attachment_id.id)
+                    a.qr_scanned=True
+            record.qr_codes_count=len(record.qr_code_ids)
                 
     def write(self, vals):
         ret = super().write(vals)

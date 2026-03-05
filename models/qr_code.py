@@ -5,6 +5,7 @@ _logger = logging.getLogger(__name__)
 class QRCode(models.Model):
     _name="qr.code"
     
+    message_id = fields.Many2one('mail.message')
     attachment_id = fields.Many2one('ir.attachment')
     code = fields.Char()
     qr_type = fields.Char()
