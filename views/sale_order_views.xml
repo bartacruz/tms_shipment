@@ -120,6 +120,7 @@
             "default_has_tms_order": True
             }
         </field>
+        <field name="domain">[('has_tms_order','=',True)]</field>
 
         <field name="view_mode">kanban,tree,form</field>
         <field
@@ -139,8 +140,8 @@
             <xpath expr="//field[@name='date_order']" position="after">
                 <field name="commitment_date"/>
             </xpath>
-            <xpath expr="//page[@name='order_lines']" position="before" invisible="not tms_order_ids">
-                <page string="Viajes" name="tms_orders">
+            <xpath expr="//page[@name='order_lines']" position="before">
+                <page string="Viajes" name="tms_orders" invisible="not tms_order_ids">
                     <group>
                         <group>
                             <field name="tms_origin_id" widget="res_partner_many2one" context="{'show_address': 1, 'show_vat': False}"/>

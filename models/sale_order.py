@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
     
     tms_distance = fields.Integer()
     tms_active = fields.Boolean(compute="_compute_tms_active", store=True)
-    
+    has_tms_order = fields.Boolean(compute="_compute_has_tms_order", store=True)
     @api.depends('tms_origin_id','tms_origin_locality_id','tms_destination_id','tms_destination_locality_id')
     def _compute_tms_labels(self):
         for record in self:

@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
         for line in self:
                 if line.order_id.pricelist_id.tms_use_distance and line.tms_order_ids:
                     quantity = line.tms_order_ids[0].distance
-                    print("checking pricelist_item of",line,"with",quantity)
+                    print("TMS checking pricelist_item of",line,"with",quantity)
                     line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
                         line.product_id,
                         quantity=quantity or 1,
