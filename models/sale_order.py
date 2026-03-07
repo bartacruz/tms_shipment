@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
         for record in self:
             stages = [stage.is_completed or stage.is_cancelled for stage in record.tms_order_ids]
             #print("_compute_tms_active",stages)
-            record.tms_active = record.state == 'sale' and not all(stages)
+            record.tms_active = not all(stages)
     
     @api.depends('partner_invoice_id')
     def _compute_partner_shipping_id(self):

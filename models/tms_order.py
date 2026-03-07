@@ -55,6 +55,30 @@ class TMSOrder(models.Model):
     
     driver_rejected = fields.Boolean()
     
+    cloned_sale_id = fields.Many2one('sale.order')
+    cloned_sale_line_id = fields.Many2one('sale.order.line')
+    
+    
+    def tms_clone(self):
+        for record in self:
+            record = record.with_context(trucking_clone=True)
+            if not record.sale_line_id.product_id.tms_trip:
+                try:
+                    print("cloning",record,record.name,record.sale_id,record.sale_line_id)
+                    record.cloned_sale_id = record.sale_id
+                    record.cloned_sale_line_id = record.sale_line_id
+                    record.sale_id = False
+                    record.sale_line_id = False
+                    record.cloned_sale_id._compute_tms_order_ids()
+                    record.cloned_sale_id._compute_has_tms_order()
+                    
+                except:
+                    _logger.exception("record %s" % record)
+                self.env.cr.commit()
+            else:
+                print("not dereffing",record,record.name,"because it has product",record.sale_line_id.product_id,record.sale_line_id.product_id.name)
+            
+    
     @api.model
     def _sale_id_expand_groups(self, records, domain, order):
         print("_expand_", records,domain,order)
@@ -191,9 +215,13 @@ class TMSOrder(models.Model):
                     record.sale_line_id.name += f' Lista de Precio: {record.sale_id.pricelist_id.name}'
                 if record.cpe_id:
                     record.sale_line_id.name += f' CTG: {record.cpe_id.ctg_number}'
-            
+        
     @api.model
     def write(self, vals):
+        if "stage_id" in vals and self.env.context.get('trucking_clone',False):
+            stage = vals.pop('stage_id')
+            print("ignoring stage_id",stage, "in tms.order write",self,vals)
+
         completed = self.env.ref("tms.tms_stage_order_completed")
         if "stage_id" in vals:
             actives = self.env["tms.stage"].search([("is_active", "=", True)]).ids
@@ -221,6 +249,10 @@ class TMSOrder(models.Model):
                     print("already ended")
                     
         ret = super().write(vals)
+        
+        if self.env.context.get('trucking_clone',False):
+            return ret
+        
         self.sale_id._compute_tms_active()
         if any(key in vals for key in ['stage_id','driver_id','date_start','date_end','tag_ids','cpe_id','warnings']):
             print("sending order_changed",self.id,self.sale_id)
@@ -267,6 +299,10 @@ class TMSOrder(models.Model):
     def action_update_from_cpe(self):
         for record in self:
             cpe = record.cpe_id
+            if not record.sale_line_id or not record.sale_line_id.product_id.tms_trip:
+                print(record,"Ignoring CPE update",record.sale_line_id)
+                return
+            
             old_stage = record.stage_id
             
             if cpe.transport_ids:
