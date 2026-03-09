@@ -114,6 +114,7 @@ class MailMessage(models.Model):
     def _compute_qr_codes(self):
         for record in self:
             for a in record.attachment_ids:
+                _logger.info("computing QR codes for %s of %s",a, record)
                 if not a.qr_scanned:
                     vals_list = a._prepare_qr_vals()
                     for vals in vals_list:

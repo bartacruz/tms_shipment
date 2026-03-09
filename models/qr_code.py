@@ -6,6 +6,6 @@ class QRCode(models.Model):
     _name="qr.code"
     
     message_id = fields.Many2one('mail.message')
-    attachment_id = fields.Many2one('ir.attachment')
+    attachment_id = fields.Many2one('ir.attachment', ondelete="set null")
     code = fields.Char()
     qr_type = fields.Char()

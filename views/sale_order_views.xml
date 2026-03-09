@@ -138,7 +138,7 @@
         <field name="inherit_id" ref="tms_sale.sale_order_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_order']" position="after">
-                <field name="commitment_date"/>
+                <field name="commitment_date"  invisible="not tms_order_ids"/>
             </xpath>
             <xpath expr="//page[@name='order_lines']" position="before">
                 <page string="Viajes" name="tms_orders" invisible="not tms_order_ids">
