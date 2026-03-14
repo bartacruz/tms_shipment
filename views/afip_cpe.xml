@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
-    <record id="cpe_view_form_inherit" model="ir.ui.view">
+    <!-- <record id="cpe_view_form_inherit" model="ir.ui.view">
         <field name="name">afip.cpe.view.form</field>
         <field name="model">afip.cpe</field>
         <field name="inherit_id" ref="l10n_ar_afip_cpe.cpe_view_form" />
@@ -30,6 +30,6 @@
                 <field name="tms_order_id" optional="show"/>
             </field>
         </field>
-    </record>
+    </record> -->
 
 </odoo>
